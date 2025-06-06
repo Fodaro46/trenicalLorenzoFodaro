@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.trenical.client.controller.LoginController"
+      spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+
+    <TextField fx:id="emailField" promptText="Inserisci email"/>
+    <Button text="Login" onAction="#onLogin"/>
+    <Label fx:id="resultLabel"/>
+</VBox>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.trenical.client.controller.AcquistoController"
+      alignment="CENTER" spacing="10" style="-fx-padding: 20;">
+
+    <TextField fx:id="userIdField" promptText="User ID"/>
+    <TextField fx:id="trattaField" promptText="Tratta (es. Milano-Roma)"/>
+    <TextField fx:id="dataField" promptText="Data (es. 2025-06-07)"/>
+    <Button text="Acquista" onAction="#onAcquista"/>
+    <Label fx:id="resultLabel"/>
+</VBox>
