@@ -1,5 +1,7 @@
 package com.trenical.client.controller;
 
+import com.trenical.client.model.User;
+import com.trenical.client.session.SessionManager;
 import com.trenical.grpc.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -37,10 +39,12 @@ public class LoginController {
 
         LoginResponse response = stub.login(request);
 
-        // Mostra l'esito del login
+        // ✅ Salva l'utente nella sessione
+        SessionManager.getInstance().login(new User(response.getUserId(), email));
+
         resultLabel.setText("Utente: " + response.getUserId() + "\n" + response.getMessage());
 
-        // Ricevi notifiche in stream
+        // 📨 Ricevi notifiche
         NotificheRequest notifRequest = NotificheRequest.newBuilder()
                 .setUserId(response.getUserId())
                 .build();
@@ -48,12 +52,9 @@ public class LoginController {
         asyncStub.streamNotifiche(notifRequest, new StreamObserver<Notifica>() {
             @Override
             public void onNext(Notifica notifica) {
-                System.out.println("📩 Notifica ricevuta: " + notifica.getMessaggio() + " @ " + notifica.getTimestamp());
-
-                // Puoi anche aggiornare la GUI, se vuoi:
-                Platform.runLater(() -> {
-                    resultLabel.setText("📩 " + notifica.getMessaggio() + " @ " + notifica.getTimestamp());
-                });
+                Platform.runLater(() ->
+                        resultLabel.setText("📩 " + notifica.getMessaggio() + " @ " + notifica.getTimestamp())
+                );
             }
 
             @Override

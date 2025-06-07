@@ -1,5 +1,6 @@
 package com.trenical.client.controller;
 
+import com.trenical.client.session.SessionManager;
 import com.trenical.grpc.GetOffertaRequest;
 import com.trenical.grpc.OffertaResponse;
 import com.trenical.grpc.PromotionServiceGrpc;
@@ -19,7 +20,6 @@ public class OffertaController {
     private PromotionServiceGrpc.PromotionServiceBlockingStub stub;
 
     private com.trenical.client.model.Tratta trattaSelezionata;
-    private String userId;
 
     @FXML
     public void initialize() {
@@ -30,9 +30,8 @@ public class OffertaController {
         this.stub = PromotionServiceGrpc.newBlockingStub(channel);
     }
 
-    public void setContesto(com.trenical.client.model.Tratta tratta, String userId) {
+    public void setContesto(com.trenical.client.model.Tratta tratta) {
         this.trattaSelezionata = tratta;
-        this.userId = userId;
         caricaOfferta();
     }
 
@@ -46,6 +45,8 @@ public class OffertaController {
                     .setOrarioArrivo(trattaSelezionata.getOrarioArrivo())
                     .setPrezzo(trattaSelezionata.getPrezzo())
                     .build();
+
+            String userId = SessionManager.getInstance().getCurrentUser().getUserId();
 
             GetOffertaRequest request = GetOffertaRequest.newBuilder()
                     .setTratta(grpcTratta)
