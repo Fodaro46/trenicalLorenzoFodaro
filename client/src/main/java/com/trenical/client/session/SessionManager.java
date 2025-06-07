@@ -4,21 +4,33 @@ import com.trenical.client.model.User;
 
 public class SessionManager {
 
-    private static User currentUser;
+    private static SessionManager instance;
+    private User currentUser;
 
-    public static void login(User user) {
-        currentUser = user;
+    private SessionManager() {
+        // Costruttore privato per impedire istanze esterne
     }
 
-    public static User getCurrentUser() {
-        return currentUser;
+    public static synchronized SessionManager getInstance() {
+        if (instance == null) {
+            instance = new SessionManager();
+        }
+        return instance;
     }
 
-    public static void logout() {
-        currentUser = null;
+    public void login(User user) {
+        this.currentUser = user;
     }
 
-    public static boolean isLoggedIn() {
-        return currentUser != null;
+    public User getCurrentUser() {
+        return this.currentUser;
+    }
+
+    public void logout() {
+        this.currentUser = null;
+    }
+
+    public boolean isLoggedIn() {
+        return this.currentUser != null;
     }
 }

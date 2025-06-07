@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "common";
+option java_outer_classname = "TrattaProto";
+
+service TrattaService {
+  rpc CercaTratte (CercaTratteRequest) returns (CercaTratteResponse);
+  rpc AcquistaBiglietto (AcquistaBigliettoRequest) returns (AcquistaBigliettoResponse);
+}
+
+message Tratta {
+  string id = 1;
+  string stazione_partenza = 2;
+  string stazione_arrivo = 3;
+  string orario_partenza = 4;
+  string orario_arrivo = 5;
+  double prezzo = 6;
+}
+
+message CercaTratteRequest {
+  string stazione_partenza = 1;
+  string stazione_arrivo = 2;
+}
+
+message CercaTratteResponse {
+  repeated Tratta tratte = 1;
+}
+
+message AcquistaBigliettoRequest {
+  string id_tratta = 1;
+}
+
+message AcquistaBigliettoResponse {
+  bool successo = 1;
+  string messaggio = 2;
+}

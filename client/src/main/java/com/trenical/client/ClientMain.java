@@ -9,7 +9,7 @@ public class ClientMain extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/acquisto-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/offerta.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
         stage.setTitle("Acquisto Biglietto");

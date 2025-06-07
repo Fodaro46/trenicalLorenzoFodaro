@@ -1,16 +1,52 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto"; // Per altri usi eventuali
+
 option java_multiple_files = true;
 option java_package = "com.trenical.grpc";
 option java_outer_classname = "TrenicalProto";
 
 package trenical;
 
+// =======================
+// ==== SERVIZI gRPC ====
+// =======================
+
 service TrenicalService {
   rpc GetTicketInfo (TicketRequest) returns (TicketResponse);
   rpc Login (LoginRequest) returns (LoginResponse);
   rpc AcquistaBiglietto (BigliettoRequest) returns (BigliettoResponse);
   rpc StreamNotifiche (NotificheRequest) returns (stream Notifica);
+}
+
+service PromotionService {
+  rpc GetOfferta (GetOffertaRequest) returns (OffertaResponse);
+}
+
+// =======================
+// ==== MESSAGGI ====
+// =======================
+
+// --- Tratta ---
+message Tratta {
+  string id = 1;
+  string stazione_partenza = 2;
+  string stazione_arrivo = 3;
+  string orario_partenza = 4;
+  string orario_arrivo = 5;
+  double prezzo = 6;
+}
+
+// --- Offerta ---
+message GetOffertaRequest {
+  Tratta tratta = 1;
+  string userId = 2;
+}
+
+message OffertaResponse {
+  string tipo = 1;
+  double prezzo_scontato = 2;
+  string descrizione = 3;
 }
 
 // --- Ticket info ---

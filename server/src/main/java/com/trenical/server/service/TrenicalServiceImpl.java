@@ -1,4 +1,4 @@
-package com.trenical.server;
+package com.trenical.server.service;
 
 import com.trenical.grpc.*;
 import io.grpc.stub.StreamObserver;
@@ -38,8 +38,26 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+    @Override
+    public void streamNotifiche(NotificheRequest request, StreamObserver<Notifica> responseObserver) {
+        String userId = request.getUserId();
 
+        new Thread(() -> {
+            try {
+                for (int i = 1; i <= 5; i++) {
+                    Notifica notifica = Notifica.newBuilder()
+                            .setMessaggio("Promo #" + i + " per utente " + userId)
+                            .setTimestamp(java.time.LocalTime.now().toString())
+                            .build();
 
-    // Gli altri metodi possono essere implementati nei prossimi sprint:
-    // streamNotifiche() ecc.
+                    responseObserver.onNext(notifica);
+                    Thread.sleep(2000); // una notifica ogni 2 secondi
+                }
+            } catch (InterruptedException e) {
+                responseObserver.onError(e);
+                return;
+            }
+            responseObserver.onCompleted();
+        }).start();
+    }
 }
