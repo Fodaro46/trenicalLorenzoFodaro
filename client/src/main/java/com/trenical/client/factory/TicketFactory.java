@@ -2,6 +2,7 @@ package com.trenical.client.factory;
 
 import com.trenical.client.model.Ticket;
 import com.trenical.grpc.BigliettoResponse;
+import com.trenical.grpc.TicketResponse;
 
 public class TicketFactory {
 
@@ -11,6 +12,15 @@ public class TicketFactory {
                 tratta,
                 data,
                 response.getStato()
+        );
+    }
+
+    public static Ticket fromTicketResponse(TicketResponse response) {
+        return new Ticket(
+                response.getTicketId(),
+                response.getTrainNumber(),
+                response.getDepartureTime(),
+                "Confermato"
         );
     }
 }

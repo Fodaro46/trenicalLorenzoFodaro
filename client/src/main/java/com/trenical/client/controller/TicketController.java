@@ -6,6 +6,8 @@ import io.grpc.ManagedChannelBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import com.trenical.client.model.Ticket;
+import com.trenical.client.factory.TicketFactory;
 
 public class TicketController {
 
@@ -20,7 +22,6 @@ public class TicketController {
             return;
         }
 
-        // Connessione gRPC
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051)
                 .usePlaintext()
                 .build();
@@ -32,12 +33,12 @@ public class TicketController {
                 .build();
 
         TicketResponse response = stub.getTicketInfo(request);
+        Ticket ticket = TicketFactory.fromTicketResponse(response);
 
-        resultArea.setText("ID: " + response.getTicketId() +
-                "\nPasseggero: " + response.getPassengerName() +
-                "\nTreno: " + response.getTrainNumber() +
-                "\nPartenza: " + response.getDepartureTime() +
-                "\nArrivo: " + response.getArrivalTime());
+        resultArea.setText("ID: " + ticket.getTicketId() +
+                "\nTratta: " + ticket.getTratta() +
+                "\nData: " + ticket.getData() +
+                "\nStato: " + ticket.getStato());
 
         channel.shutdown();
     }
