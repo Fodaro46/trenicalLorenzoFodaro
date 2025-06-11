@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      xmlns="http://javafx.com/javafx"
+      fx:controller="com.trenical.client.controller.TicketHistoryController"
+      spacing="10" alignment="CENTER"
+      style="-fx-padding: 20;">
+
+    <TextField fx:id="userIdField" promptText="Inserisci User ID"/>
+    <Button text="Carica Storico" onAction="#onLoadTickets"/>
+
+    <TableView fx:id="tableView" prefHeight="250">
+        <columns>
+            <TableColumn fx:id="colId" text="ID Biglietto"/>
+            <TableColumn fx:id="colTratta" text="Tratta"/>
+            <TableColumn fx:id="colData" text="Data"/>
+            <TableColumn fx:id="colStato" text="Stato"/>
+        </columns>
+    </TableView>
+</VBox>

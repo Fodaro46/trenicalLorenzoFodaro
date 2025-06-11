@@ -1,5 +1,6 @@
 package com.trenical.client.controller;
 
+import com.trenical.client.model.Tratta;
 import com.trenical.client.session.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,53 +12,95 @@ import java.io.IOException;
 
 public class MainController {
 
-    @FXML
-    private StackPane contentPane;
-
-    private void setContent(String fxmlPath) {
-        try {
-            System.out.println("Trying to load: " + fxmlPath);
-            var resource = getClass().getResource("/" + fxmlPath); // 🔥 SLASH AGGIUNTO
-            if (resource == null) {
-                System.err.println("❌ Resource not found: " + fxmlPath);
-                return;
-            }
-            Pane pane = FXMLLoader.load(resource);
-            contentPane.getChildren().setAll(pane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    @FXML private StackPane contentPane;
+    private TrattaController trattaController;
 
     private boolean checkLogin() {
         if (!SessionManager.getInstance().isLoggedIn()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Accesso Richiesto");
-            alert.setHeaderText("Devi essere loggato");
-            alert.setContentText("Effettua prima il login per accedere a questa funzionalità.");
-            alert.showAndWait();
+            Alert a = new Alert(Alert.AlertType.WARNING,
+                    "Effettua il login prima di usare questa funzionalità.");
+            a.setHeaderText("Accesso Richiesto");
+            a.showAndWait();
             return false;
         }
         return true;
     }
 
     public void showLogin() {
-        setContent("login-view.fxml");
+        loadView("login-view.fxml");
     }
 
     public void showTratte() {
-        setContent("Trattaview.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/Trattaview.fxml"));
+            Pane pane = loader.load();
+            trattaController = loader.getController();
+            contentPane.getChildren().setAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showAcquisto() {
-        setContent("acquisto-view.fxml");
+        loadView("acquisto-view.fxml");
     }
 
     public void showOfferta() {
-        setContent("offerta.fxml");
+        if (!checkLogin()) return;
+        if (trattaController == null) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Visita prima 'Ricerca Tratte'").showAndWait();
+            return;
+        }
+        Tratta sel = trattaController.getSelectedTratta();
+        if (sel == null) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Seleziona una tratta.").showAndWait();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/offerta.fxml"));
+            Pane pane = loader.load();
+            OffertaController oc = loader.getController();
+            // Converti modello in gRPC Tratta e passa al controller
+            com.trenical.grpc.Tratta grpcT = com.trenical.grpc.Tratta.newBuilder()
+                    .setId(sel.getId())
+                    .setStazionePartenza(sel.getStazionePartenza())
+                    .setStazioneArrivo(sel.getStazioneArrivo())
+                    .setOrarioPartenza(sel.getOrarioPartenza())
+                    .setOrarioArrivo(sel.getOrarioArrivo())
+                    .setPrezzo(sel.getPrezzo())
+                    .build();
+            oc.setContesto(grpcT);
+            contentPane.getChildren().setAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showTicket() {
-        setContent("ticket-view.fxml");
+        loadView("ticket-view.fxml");
+    }
+
+    public void showStorico() {
+        if (!checkLogin()) return;
+        loadView("ticket-history.fxml");
+    }
+
+    public void showNotifiche() {
+        if (!checkLogin()) return;
+        loadView("notifiche.fxml");
+    }
+
+    private void loadView(String fxml) {
+        try {
+            Pane p = FXMLLoader.load(
+                    getClass().getResource("/" + fxml));
+            contentPane.getChildren().setAll(p);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

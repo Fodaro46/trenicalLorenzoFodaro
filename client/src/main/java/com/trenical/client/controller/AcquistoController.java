@@ -1,47 +1,86 @@
 package com.trenical.client.controller;
 
-import com.trenical.grpc.*;
+import com.trenical.client.model.Tratta;
+import com.trenical.client.session.SessionManager;
+import common.AcquistaBigliettoRequest;
+import common.AcquistaBigliettoResponse;
+import common.TrattaServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 public class AcquistoController {
 
-    @FXML private TextField userIdField;
-    @FXML private TextField trattaField;
-    @FXML private TextField dataField;
-    @FXML private Label resultLabel;
+    @FXML private Label trattaLabel;
+    @FXML private Label prezzoLabel;
+    @FXML private DatePicker dataPicker;
+
+    private Tratta tratta;
+
+    private ManagedChannel channel;
+    private TrattaServiceGrpc.TrattaServiceBlockingStub stub;
+
+    public void setTratta(Tratta tratta) {
+        this.tratta = tratta;
+        trattaLabel.setText(tratta.getStazionePartenza() + " → " + tratta.getStazioneArrivo() +
+                " (" + tratta.getOrarioPartenza() + " - " + tratta.getOrarioArrivo() + ")");
+        prezzoLabel.setText("€ " + tratta.getPrezzo());
+    }
+
+    @FXML
+    public void initialize() {
+        channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+                .usePlaintext().build();
+        stub = TrattaServiceGrpc.newBlockingStub(channel);
+    }
 
     @FXML
     public void onAcquista() {
-        String userId = userIdField.getText().trim();
-        String tratta = trattaField.getText().trim();
-        String data = dataField.getText().trim();
-
-        if (userId.isEmpty() || tratta.isEmpty() || data.isEmpty()) {
-            resultLabel.setText("Tutti i campi sono obbligatori.");
+        String userId = SessionManager.getInstance().getCurrentUser().getUserId();
+        if (userId == null) {
+            showError("Effettua il login prima di acquistare.");
             return;
         }
 
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051)
-                .usePlaintext()
-                .build();
+        String data = dataPicker.getValue() != null ? dataPicker.getValue().toString() : "";
+        if (data.isEmpty()) {
+            showError("Inserisci la data del viaggio.");
+            return;
+        }
 
-        TrenicalServiceGrpc.TrenicalServiceBlockingStub stub = TrenicalServiceGrpc.newBlockingStub(channel);
-
-        BigliettoRequest request = BigliettoRequest.newBuilder()
+        AcquistaBigliettoRequest request = AcquistaBigliettoRequest.newBuilder()
                 .setUserId(userId)
-                .setTratta(tratta)
+                .setIdTratta(tratta.getId())
                 .setData(data)
                 .build();
 
-        BigliettoResponse response = stub.acquistaBiglietto(request);
+        try {
+            AcquistaBigliettoResponse response = stub.acquistaBiglietto(request);
+            showInfo(response.getMessaggio());
+            closeWindow();
+        } catch (Exception e) {
+            showError("Errore durante l'acquisto: " + e.getMessage());
+        }
+    }
 
-        resultLabel.setText("Biglietto ID: " + response.getBigliettoId() +
-                "\nStato: " + response.getStato());
+    private void showError(String msg) {
+        new Alert(Alert.AlertType.ERROR, msg).showAndWait();
+    }
 
-        channel.shutdown();
+    private void showInfo(String msg) {
+        new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
+    }
+
+    private void closeWindow() {
+        Stage stage = (Stage) dataPicker.getScene().getWindow();
+        stage.close();
+    }
+
+    public void shutdown() {
+        if (channel != null && !channel.isShutdown()) {
+            channel.shutdown();
+        }
     }
 }

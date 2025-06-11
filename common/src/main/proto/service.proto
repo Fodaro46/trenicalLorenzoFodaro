@@ -82,7 +82,9 @@ message BigliettoRequest {
 message BigliettoResponse {
   string bigliettoId = 1;
   string stato = 2;
+  double prezzo = 3;
 }
+
 
 // --- Notifiche ---
 message NotificheRequest {

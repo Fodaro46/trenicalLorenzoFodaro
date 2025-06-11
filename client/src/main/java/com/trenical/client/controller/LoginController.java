@@ -47,6 +47,7 @@ public class LoginController {
                     .setEmail(email)
                     .build();
 
+            System.out.println("🔐 Tentativo login con email: " + email);
             LoginResponse response = stub.login(request);
 
             // Salva utente nella sessione
@@ -89,14 +90,21 @@ public class LoginController {
 
     private void mostraOffertaDemo() {
         try {
-            // Tratta simulata, placeholder per ora
-            Tratta trattaDemo = new Tratta("T01", "Milano", "Roma", "15:30", "18:45", 89.99);
+            // Tratta demo reale da passare
+            com.trenical.grpc.Tratta trattaDemo = com.trenical.grpc.Tratta.newBuilder()
+                    .setId("T-001")
+                    .setStazionePartenza("Milano")
+                    .setStazioneArrivo("Roma")
+                    .setOrarioPartenza("15:30")
+                    .setOrarioArrivo("18:45")
+                    .setPrezzo(89.99)
+                    .build();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/offerta.fxml"));
             Scene scene = new Scene(loader.load());
 
             OffertaController controller = loader.getController();
-            controller.setContesto(trattaDemo);  // Passa la tratta
+            controller.setContesto(trattaDemo); // ✅ Passaggio reale
 
             Stage stage = new Stage();
             stage.setTitle("Offerta Attiva");

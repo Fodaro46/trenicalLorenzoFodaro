@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "stazionePartenza": "milano",
+    "stazioneArrivo": "bologna",
+    "orarioPartenza": "8:45",
+    "orarioArrivo": "8:45",
+    "prezzo": 20.0
+  },
+  {
+    "id": "2",
+    "stazionePartenza": "polonia",
+    "stazioneArrivo": "germania",
+    "orarioPartenza": "2:34",
+    "orarioArrivo": "2:34",
+    "prezzo": 20.0
+  },
+  {
+    "id": "3",
+    "stazionePartenza": "milano",
+    "stazioneArrivo": "bologna",
+    "orarioPartenza": "9:00",
+    "orarioArrivo": "9:00",
+    "prezzo": 20.0
+  }
+]

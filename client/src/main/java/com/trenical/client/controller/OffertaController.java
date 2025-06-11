@@ -8,67 +8,61 @@ import com.trenical.grpc.Tratta;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 
 public class OffertaController {
 
-    @FXML private Label tipoLabel;
-    @FXML private Label prezzoLabel;
-    @FXML private Label descrizioneLabel;
-
+    private Tratta tratta;
     private ManagedChannel channel;
-    private PromotionServiceGrpc.PromotionServiceBlockingStub stub;
 
-    private com.trenical.client.model.Tratta trattaSelezionata;
+    public void setContesto(Tratta tratta) {
+        this.tratta = tratta;
+        calcolaOfferta();
+    }
 
-    @FXML
-    public void initialize() {
-        this.channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+    private void calcolaOfferta() {
+        if (tratta == null) {
+            showAlert("Errore", "Nessuna tratta fornita");
+            return;
+        }
+
+        String userId = SessionManager.getInstance().getCurrentUser().getUserId();
+        channel = ManagedChannelBuilder.forAddress("localhost", 50051)
                 .usePlaintext()
                 .build();
+        PromotionServiceGrpc.PromotionServiceBlockingStub stub =
+                PromotionServiceGrpc.newBlockingStub(channel);
 
-        this.stub = PromotionServiceGrpc.newBlockingStub(channel);
-    }
-
-    public void setContesto(com.trenical.client.model.Tratta tratta) {
-        this.trattaSelezionata = tratta;
-        caricaOfferta();
-    }
-
-    private void caricaOfferta() {
         try {
-            Tratta grpcTratta = Tratta.newBuilder()
-                    .setId(trattaSelezionata.getId())
-                    .setStazionePartenza(trattaSelezionata.getStazionePartenza())
-                    .setStazioneArrivo(trattaSelezionata.getStazioneArrivo())
-                    .setOrarioPartenza(trattaSelezionata.getOrarioPartenza())
-                    .setOrarioArrivo(trattaSelezionata.getOrarioArrivo())
-                    .setPrezzo(trattaSelezionata.getPrezzo())
-                    .build();
-
-            String userId = SessionManager.getInstance().getCurrentUser().getUserId();
-
-            GetOffertaRequest request = GetOffertaRequest.newBuilder()
-                    .setTratta(grpcTratta)
-                    .setUserId(userId)
-                    .build();
-
-            OffertaResponse response = stub.getOfferta(request);
-
-            tipoLabel.setText("Tipo: " + response.getTipo());
-            prezzoLabel.setText("Prezzo Scontato: €" + String.format("%.2f", response.getPrezzoScontato()));
-            descrizioneLabel.setText("Descrizione: " + response.getDescrizione());
-
+            OffertaResponse response = stub.getOfferta(
+                    GetOffertaRequest.newBuilder()
+                            .setUserId(userId)
+                            .setTratta(tratta)
+                            .build()
+            );
+            prezzoLabel.setText("€ " + response.getPrezzoScontato());
+            descrizioneLabel.setText(response.getDescrizione());
         } catch (Exception e) {
-            tipoLabel.setText("Errore");
-            prezzoLabel.setText("");
-            descrizioneLabel.setText(e.getMessage());
+            prezzoLabel.setText("-");
+            descrizioneLabel.setText("Errore durante il calcolo");
+            showAlert("Errore", e.getMessage());
+        } finally {
+            if (channel != null && !channel.isShutdown()) {
+                channel.shutdownNow();
+            }
         }
     }
 
-    public void shutdown() {
-        if (channel != null && !channel.isShutdown()) {
-            channel.shutdown();
-        }
+    @FXML
+    private Label prezzoLabel;
+    @FXML private Label descrizioneLabel;
+
+    private void showAlert(String title, String msg) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setTitle(title);
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.showAndWait();
     }
 }

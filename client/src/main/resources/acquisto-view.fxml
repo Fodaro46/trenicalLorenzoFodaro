@@ -8,9 +8,7 @@
       fx:controller="com.trenical.client.controller.AcquistoController"
       alignment="CENTER" spacing="10" style="-fx-padding: 20;">
 
-    <TextField fx:id="userIdField" promptText="User ID"/>
-    <TextField fx:id="trattaField" promptText="Tratta (es. Milano-Roma)"/>
-    <TextField fx:id="dataField" promptText="Data (es. 2025-06-07)"/>
-    <Button text="Acquista" onAction="#onAcquista"/>
-    <Label fx:id="resultLabel"/>
+    <TextField fx:id="trattaField" promptText="ID Tratta (es. T-001)"/>
+    <TextField fx:id="dataField" promptText="Data (es. 2025-06-11)"/>
+    <Button text="Acquista Biglietto" onAction="#onAcquista"/>
 </VBox>

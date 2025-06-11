@@ -1,0 +1,38 @@
+[
+  {
+    "id": "b7b6ca8b-bf00-4078-b1a0-1a7648ccbd70",
+    "userId": "",
+    "trattaId": "1",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 20.0,
+    "timestamp": "2025-06-11T14:38:34.176038"
+  },
+  {
+    "id": "7feca478-ef1b-4bbd-b9e7-950a1e6c2efc",
+    "userId": "",
+    "trattaId": "1",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 20.0,
+    "timestamp": "2025-06-11T14:52:23.378806500"
+  },
+  {
+    "id": "ce26aa7b-c552-449e-a6db-f2e8a61e00cb",
+    "userId": "",
+    "trattaId": "3",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 20.0,
+    "timestamp": ""
+  },
+  {
+    "id": "5f5516ce-b4f5-4329-b73e-553187f7c825",
+    "userId": "",
+    "trattaId": "2",
+    "partenza": "polonia",
+    "arrivo": "germania",
+    "prezzo": 20.0,
+    "timestamp": ""
+  }
+]

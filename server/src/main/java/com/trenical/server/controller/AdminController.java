@@ -1,6 +1,8 @@
 package com.trenical.server.controller;
 
 import com.trenical.server.model.Treno;
+import com.trenical.server.model.Tratta;
+import com.trenical.server.repository.TrattaRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,41 +24,50 @@ public class AdminController {
 
     @FXML
     public void initialize() {
-        codiceColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getCodice()));
-        partenzaColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getPartenza()));
-        arrivoColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArrivo()));
-        orarioColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getOrario()));
+        codiceColumn.setCellValueFactory(cd ->
+                new javafx.beans.property.SimpleStringProperty(cd.getValue().getCodice()));
+        partenzaColumn.setCellValueFactory(cd ->
+                new javafx.beans.property.SimpleStringProperty(cd.getValue().getPartenza()));
+        arrivoColumn.setCellValueFactory(cd ->
+                new javafx.beans.property.SimpleStringProperty(cd.getValue().getArrivo()));
+        orarioColumn.setCellValueFactory(cd ->
+                new javafx.beans.property.SimpleStringProperty(cd.getValue().getOrario()));
         trenoTable.setItems(treni);
     }
 
     @FXML
     public void aggiungiTreno() {
-        String codice = codiceField.getText();
-        String partenza = partenzaField.getText();
-        String arrivo = arrivoField.getText();
-        String orario = orarioField.getText();
+        String codice  = codiceField.getText().trim();
+        String partenza = partenzaField.getText().trim();
+        String arrivo   = arrivoField.getText().trim();
+        String orario   = orarioField.getText().trim();
 
-        if (!codice.isEmpty() && !partenza.isEmpty() && !arrivo.isEmpty() && !orario.isEmpty()) {
-            Treno treno = new Treno(codice, partenza, arrivo, orario);
-            treni.add(treno);
-
-            model.Tratta trattaModel = new model.Tratta(
-                    codice,
-                    partenza,
-                    arrivo,
-                    orario,
-                    "",
-                    20.0      // prezzo: puoi aggiungere un TextField se vuoi farlo dinamico
-            );
-
-            com.trenical.server.repository.TrattaRepository.aggiungiTratta(trattaModel);
-
-
-            codiceField.clear();
-            partenzaField.clear();
-            arrivoField.clear();
-            orarioField.clear();
+        if (codice.isEmpty() || partenza.isEmpty() || arrivo.isEmpty() || orario.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Compila tutti i campi.").showAndWait();
+            return;
         }
-    }
-    }
 
+        // Aggiorno la tabella interna
+        Treno t = new Treno(codice, partenza, arrivo, orario);
+        treni.add(t);
+
+        // Creo il modello Tratta e lo salvo su file
+        Tratta trattaModel = new Tratta(
+                codice,            // id della tratta
+                partenza,          // stazionePartenza
+                arrivo,            // stazioneArrivo
+                orario,            // orarioPartenza
+                orario,            // orarioArrivo (o aggiungi un TextField dedicato)
+                20.0               // prezzo fisso per ora
+        );
+        TrattaRepository.aggiungiTratta(trattaModel);
+
+        // Pulisco i campi
+        codiceField.clear();
+        partenzaField.clear();
+        arrivoField.clear();
+        orarioField.clear();
+
+        new Alert(Alert.AlertType.INFORMATION, "Tratta aggiunta con successo!").showAndWait();
+    }
+}
