@@ -48,7 +48,6 @@ public class TrattaController {
 
     @FXML
     public void initialize() {
-        // Colonne
         colPartenza.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStazionePartenza()));
         colArrivo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStazioneArrivo()));
         colOrarioPartenza.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOrarioPartenza()));
@@ -57,7 +56,6 @@ public class TrattaController {
 
         tableView.setItems(trattaList);
 
-        // Connessione gRPC
         channel = ManagedChannelBuilder.forAddress("localhost", 50051)
                 .usePlaintext()
                 .build();
@@ -68,6 +66,8 @@ public class TrattaController {
     private void onCercaTratte() {
         String partenza = partenzaField.getText().trim();
         String arrivo = arrivoField.getText().trim();
+
+        System.out.println("🟡 Richiesta tratta: da '" + partenza + "' a '" + arrivo + "'");
 
         if (partenza.isEmpty() || arrivo.isEmpty()) {
             mostraErrore("Inserisci entrambe le stazioni.");
@@ -83,24 +83,31 @@ public class TrattaController {
             CercaTratteResponse response = stub.cercaTratte(request);
 
             trattaList.clear();
-            if (response.getTratteList().isEmpty()) {
+            int numTratte = response.getTratteList().size();
+            System.out.println("🟢 Numero tratte ricevute: " + numTratte);
+
+            if (numTratte == 0) {
                 mostraErrore("Nessuna tratta trovata.");
                 return;
             }
 
-            response.getTratteList().forEach(t -> trattaList.add(
-                    new Tratta(
-                            t.getId(),
-                            t.getStazionePartenza(),
-                            t.getStazioneArrivo(),
-                            t.getOrarioPartenza(),
-                            t.getOrarioArrivo(),
-                            t.getPrezzo()
-                    )
-            ));
+            response.getTratteList().forEach(t -> {
+                System.out.println("   ➤ " + t.getStazionePartenza() + " → " + t.getStazioneArrivo()
+                        + " | " + t.getOrarioPartenza() + " - " + t.getOrarioArrivo()
+                        + " | Prezzo: " + t.getPrezzo());
+                trattaList.add(new Tratta(
+                        t.getId(),
+                        t.getStazionePartenza(),
+                        t.getStazioneArrivo(),
+                        t.getOrarioPartenza(),
+                        t.getOrarioArrivo(),
+                        t.getPrezzo()
+                ));
+            });
 
         } catch (Exception e) {
             mostraErrore("Errore di connessione al server: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -128,6 +135,7 @@ public class TrattaController {
 
         } catch (Exception e) {
             mostraErrore("Errore durante l'acquisto: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

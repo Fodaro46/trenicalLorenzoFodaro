@@ -9,10 +9,13 @@ public class ClientMain extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/offerta.fxml"));
-        Scene scene = new Scene(loader.load());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main-view.fxml"));
+        Scene scene = new Scene(loader.load(), 900, 600); // larghezza e altezza iniziali
+
+        stage.setMinWidth(800);
+        stage.setMinHeight(500);
+        stage.setTitle("TreniCal - Utente");
         stage.setScene(scene);
-        stage.setTitle("Acquisto Biglietto");
         stage.show();
     }
 

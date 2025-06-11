@@ -1,52 +1,48 @@
 package com.trenical.server.service;
 
-import common.AcquistaBigliettoRequest;
-import common.AcquistaBigliettoResponse;
-import common.CercaTratteRequest;
-import common.CercaTratteResponse;
-import common.Tratta;
-import common.TrattaServiceGrpc;
-
+import com.trenical.server.repository.TrattaRepository;
+import common.*;
 import io.grpc.stub.StreamObserver;
+import model.Tratta;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class TrattaServiceImpl extends TrattaServiceGrpc.TrattaServiceImplBase {
-
-    private final List<Tratta> tratteDisponibili = Arrays.asList(
-            Tratta.newBuilder()
-                    .setId(UUID.randomUUID().toString())
-                    .setStazionePartenza("Milano")
-                    .setStazioneArrivo("Roma")
-                    .setOrarioPartenza("08:00")
-                    .setOrarioArrivo("11:30")
-                    .setPrezzo(49.99)
-                    .build(),
-            Tratta.newBuilder()
-                    .setId(UUID.randomUUID().toString())
-                    .setStazionePartenza("Firenze")
-                    .setStazioneArrivo("Napoli")
-                    .setOrarioPartenza("10:00")
-                    .setOrarioArrivo("13:45")
-                    .setPrezzo(39.50)
-                    .build()
-    );
 
     @Override
     public void cercaTratte(CercaTratteRequest request, StreamObserver<CercaTratteResponse> responseObserver) {
         String partenza = request.getStazionePartenza().toLowerCase();
         String arrivo = request.getStazioneArrivo().toLowerCase();
 
+        System.out.println("📥 [SERVER] Richiesta tratta da '" + partenza + "' a '" + arrivo + "'");
+
+        List<Tratta> tutteLeTratte = TrattaRepository.caricaTratte();
+        System.out.println("📦 [SERVER] Numero totale tratte caricate dal file: " + tutteLeTratte.size());
+        for (Tratta t : tutteLeTratte) {
+            System.out.println("🔸 " + t);
+        }
+
         CercaTratteResponse.Builder responseBuilder = CercaTratteResponse.newBuilder();
 
-        for (Tratta tratta : tratteDisponibili) {
+        for (Tratta tratta : tutteLeTratte) {
             if (tratta.getStazionePartenza().toLowerCase().contains(partenza)
                     && tratta.getStazioneArrivo().toLowerCase().contains(arrivo)) {
-                responseBuilder.addTratte(tratta);
+
+                common.Tratta grpcTratta = common.Tratta.newBuilder()
+                        .setId(tratta.getId())
+                        .setStazionePartenza(tratta.getStazionePartenza())
+                        .setStazioneArrivo(tratta.getStazioneArrivo())
+                        .setOrarioPartenza(tratta.getOrarioPartenza())
+                        .setOrarioArrivo(tratta.getOrarioArrivo())
+                        .setPrezzo(tratta.getPrezzo())
+                        .build();
+
+                responseBuilder.addTratte(grpcTratta);
             }
         }
+
+        int trovate = responseBuilder.getTratteCount();
+        System.out.println("✅ [SERVER] Tratte corrispondenti trovate: " + trovate);
 
         responseObserver.onNext(responseBuilder.build());
         responseObserver.onCompleted();
@@ -55,8 +51,12 @@ public class TrattaServiceImpl extends TrattaServiceGrpc.TrattaServiceImplBase {
     @Override
     public void acquistaBiglietto(AcquistaBigliettoRequest request, StreamObserver<AcquistaBigliettoResponse> responseObserver) {
         String idTratta = request.getIdTratta();
+        System.out.println("🎟️ [SERVER] Richiesta acquisto biglietto per ID tratta: " + idTratta);
 
-        boolean esiste = tratteDisponibili.stream().anyMatch(t -> t.getId().equals(idTratta));
+        List<Tratta> tutteLeTratte = TrattaRepository.caricaTratte();
+        boolean esiste = tutteLeTratte.stream().anyMatch(t -> t.getId().equals(idTratta));
+
+        System.out.println("🔍 [SERVER] Tratta trovata: " + esiste);
 
         AcquistaBigliettoResponse response = AcquistaBigliettoResponse.newBuilder()
                 .setSuccesso(esiste)

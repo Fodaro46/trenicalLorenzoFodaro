@@ -42,7 +42,7 @@ public class LoginController {
         TrenicalServiceGrpc.TrenicalServiceStub asyncStub = TrenicalServiceGrpc.newStub(channel);
 
         try {
-            // Login gRPC
+            //gRPC
             LoginRequest request = LoginRequest.newBuilder()
                     .setEmail(email)
                     .build();

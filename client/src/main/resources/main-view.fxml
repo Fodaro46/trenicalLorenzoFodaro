@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.trenical.client.controller.MainController">
+
+    <left>
+        <VBox spacing="12" alignment="TOP_CENTER" style="-fx-padding: 15; -fx-background-color: #f0f0f0;">
+            <Button text="Login" onAction="#showLogin" prefWidth="150"/>
+            <Button text="Ricerca Tratte" onAction="#showTratte" prefWidth="150"/>
+            <Button text="Acquisto Biglietto" onAction="#showAcquisto" prefWidth="150"/>
+            <Button text="Promozione Attiva" onAction="#showOfferta" prefWidth="150"/>
+            <Button text="Cerca Ticket" onAction="#showTicket" prefWidth="150"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentPane" style="-fx-background-color: white; -fx-padding: 20;" />
+    </center>
+</BorderPane>

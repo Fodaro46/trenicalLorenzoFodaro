@@ -39,10 +39,24 @@ public class AdminController {
         if (!codice.isEmpty() && !partenza.isEmpty() && !arrivo.isEmpty() && !orario.isEmpty()) {
             Treno treno = new Treno(codice, partenza, arrivo, orario);
             treni.add(treno);
+
+            model.Tratta trattaModel = new model.Tratta(
+                    codice,
+                    partenza,
+                    arrivo,
+                    orario,
+                    "",
+                    20.0      // prezzo: puoi aggiungere un TextField se vuoi farlo dinamico
+            );
+
+            com.trenical.server.repository.TrattaRepository.aggiungiTratta(trattaModel);
+
+
             codiceField.clear();
             partenzaField.clear();
             arrivoField.clear();
             orarioField.clear();
         }
     }
-}
+    }
+
