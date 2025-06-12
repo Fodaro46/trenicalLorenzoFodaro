@@ -34,5 +34,14 @@
     "arrivo": "germania",
     "prezzo": 20.0,
     "timestamp": ""
+  },
+  {
+    "id": "2c2c37b2-18ae-416f-9132-e1bd8adf1b90",
+    "userId": "",
+    "trattaId": "1",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 20.0,
+    "timestamp": ""
   }
 ]
