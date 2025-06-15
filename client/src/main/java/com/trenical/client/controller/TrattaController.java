@@ -1,21 +1,22 @@
 package com.trenical.client.controller;
 
 import com.trenical.client.model.Tratta;
-import common.AcquistaBigliettoRequest;
-import common.AcquistaBigliettoResponse;
-import common.CercaTratteRequest;
-import common.CercaTratteResponse;
-import common.TrattaServiceGrpc;
+import com.trenical.client.session.SessionManager;
+import com.trenical.grpc.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Window;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class TrattaController {
 
@@ -30,34 +31,39 @@ public class TrattaController {
 
     private final ObservableList<Tratta> trattaList = FXCollections.observableArrayList();
     private ManagedChannel channel;
-    private TrattaServiceGrpc.TrattaServiceBlockingStub stub;
+    private TrenicalServiceGrpc.TrenicalServiceBlockingStub stub;
 
     @FXML
     public void initialize() {
-        // Configura le colonne
-        colPartenza.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getStazionePartenza()));
-        colArrivo.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getStazioneArrivo()));
-        colOrarioPartenza.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getOrarioPartenza()));
-        colOrarioArrivo.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getOrarioArrivo()));
-        colPrezzo.setCellValueFactory(data ->
-                new SimpleDoubleProperty(data.getValue().getPrezzo()).asObject());
+        // Setup tabella
+        colPartenza.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStazionePartenza()));
+        colArrivo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStazioneArrivo()));
+        colOrarioPartenza.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrarioPartenza()));
+        colOrarioArrivo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrarioArrivo()));
+        colPrezzo.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getPrezzo()).asObject());
 
         tableView.setItems(trattaList);
 
-        // Inizializza gRPC
+        // Avvio canale gRPC
         channel = ManagedChannelBuilder.forAddress("localhost", 50051)
                 .usePlaintext()
                 .build();
-        stub = TrattaServiceGrpc.newBlockingStub(channel);
+        stub = TrenicalServiceGrpc.newBlockingStub(channel);
 
-        // Chiudi il canale quando la finestra viene chiusa
-        Platform.runLater(() -> {
-            Window window = tableView.getScene().getWindow();
-            window.setOnHidden(e -> shutdown());
+        // Chiudi il canale gRPC alla chiusura finestra
+        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
+                    if (newWin != null) {
+                        newWin.setOnHiding(e -> {
+                            if (channel != null && !channel.isShutdown()) {
+                                channel.shutdownNow();
+                                System.out.println("🔌 Canale gRPC chiuso da TrattaController");
+                            }
+                        });
+                    }
+                });
+            }
         });
     }
 
@@ -67,76 +73,65 @@ public class TrattaController {
         String arrivo = arrivoField.getText().trim();
 
         if (partenza.isEmpty() || arrivo.isEmpty()) {
-            mostraErrore("Inserisci entrambe le stazioni.");
+            showAlert("Inserisci entrambe le stazioni.");
             return;
         }
 
-        CercaTratteRequest request = CercaTratteRequest.newBuilder()
+        CercaTratteRequest req = CercaTratteRequest.newBuilder()
                 .setStazionePartenza(partenza)
                 .setStazioneArrivo(arrivo)
+                .setData("")  // eventualmente usabile in futuro
                 .build();
 
         try {
-            CercaTratteResponse response = stub.cercaTratte(request);
-            trattaList.clear();
+            CercaTratteResponse resp = stub.cercaTratte(req);
+            trattaList.setAll(resp.getTratteList().stream().map(t ->
+                    new Tratta(t.getId(), t.getStazionePartenza(), t.getStazioneArrivo(),
+                            t.getOrarioPartenza(), t.getOrarioArrivo(), t.getPrezzo())
+            ).toList());
 
-            if (response.getTratteList().isEmpty()) {
-                mostraErrore("Nessuna tratta trovata.");
-                return;
+            if (trattaList.isEmpty()) {
+                showAlert("Nessuna tratta trovata.");
             }
-
-            response.getTratteList().forEach(t -> trattaList.add(new Tratta(
-                    t.getId(),
-                    t.getStazionePartenza(),
-                    t.getStazioneArrivo(),
-                    t.getOrarioPartenza(),
-                    t.getOrarioArrivo(),
-                    t.getPrezzo()
-            )));
-        } catch (Exception e) {
-            mostraErrore("Errore di connessione: " + e.getMessage());
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showAlert("Errore di connessione: " + ex.getMessage());
         }
     }
 
     @FXML
     private void onAcquista() {
-        Tratta selected = getSelectedTratta();
-        if (selected == null) {
-            mostraErrore("Seleziona una tratta da acquistare.");
+        Tratta sel = tableView.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            showAlert("Seleziona prima una tratta.");
+            return;
+        }
+        if (!SessionManager.getInstance().isLoggedIn()) {
+            showAlert("Effettua il login prima di acquistare.");
             return;
         }
 
-        AcquistaBigliettoRequest request = AcquistaBigliettoRequest.newBuilder()
-                .setIdTratta(selected.getId())
-                .build();
-
         try {
-            AcquistaBigliettoResponse response = stub.acquistaBiglietto(request);
-            Alert info = new Alert(Alert.AlertType.INFORMATION, response.getMessaggio());
-            info.setHeaderText(null);
-            info.showAndWait();
-        } catch (Exception e) {
-            mostraErrore("Errore durante l'acquisto: " + e.getMessage());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/acquisto-view.fxml"));
+            Pane pane = loader.load();
+            AcquistoController ctrl = loader.getController();
+            ctrl.setTratta(sel);
+
+            Stage stage = new Stage();
+            stage.setTitle("Acquista Biglietto");
+            stage.setScene(new Scene(pane));
+            stage.show();
+        } catch (IOException e) {
             e.printStackTrace();
+            showAlert("Impossibile aprire la finestra di acquisto.");
         }
     }
 
-    private void mostraErrore(String msg) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, msg);
-        alert.setHeaderText(null);
-        alert.showAndWait();
-    }
-
-    /** Permette a MainController di recuperare la tratta selezionata */
     public Tratta getSelectedTratta() {
         return tableView.getSelectionModel().getSelectedItem();
     }
 
-    /** Chiude il canale gRPC */
-    public void shutdown() {
-        if (channel != null && !channel.isShutdown()) {
-            channel.shutdownNow();
-        }
+    private void showAlert(String msg) {
+        new Alert(Alert.AlertType.WARNING, msg).showAndWait();
     }
 }

@@ -23,7 +23,7 @@ public class Tratta {
         this.prezzo           = prezzo;
     }
 
-    // Getters
+
     public String getId() { return id; }
     public String getStazionePartenza() { return stazionePartenza; }
     public String getStazioneArrivo()   { return stazioneArrivo; }
@@ -31,7 +31,7 @@ public class Tratta {
     public String getOrarioArrivo()     { return orarioArrivo; }
     public double getPrezzo()           { return prezzo; }
 
-    // (Opzionali)
+
     public void setId(String id)                                  { this.id = id; }
     public void setStazionePartenza(String stazionePartenza)      { this.stazionePartenza = stazionePartenza; }
     public void setStazioneArrivo(String stazioneArrivo)          { this.stazioneArrivo = stazioneArrivo; }

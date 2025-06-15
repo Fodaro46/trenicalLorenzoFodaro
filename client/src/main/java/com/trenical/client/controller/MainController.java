@@ -43,7 +43,28 @@ public class MainController {
     }
 
     public void showAcquisto() {
-        loadView("acquisto-view.fxml");
+        if (!checkLogin()) return;
+        if (trattaController == null) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Visita prima 'Ricerca Tratte'").showAndWait();
+            return;
+        }
+        Tratta sel = trattaController.getSelectedTratta();
+        if (sel == null) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Seleziona una tratta.").showAndWait();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/acquisto-view.fxml"));
+            Pane pane = loader.load();
+            AcquistoController ac = loader.getController();
+            ac.setTratta(sel);
+            contentPane.getChildren().setAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showOfferta() {
@@ -64,7 +85,6 @@ public class MainController {
                     getClass().getResource("/offerta.fxml"));
             Pane pane = loader.load();
             OffertaController oc = loader.getController();
-            // Converti modello in gRPC Tratta e passa al controller
             com.trenical.grpc.Tratta grpcT = com.trenical.grpc.Tratta.newBuilder()
                     .setId(sel.getId())
                     .setStazionePartenza(sel.getStazionePartenza())
@@ -81,6 +101,7 @@ public class MainController {
     }
 
     public void showTicket() {
+        if (!checkLogin()) return;
         loadView("ticket-view.fxml");
     }
 

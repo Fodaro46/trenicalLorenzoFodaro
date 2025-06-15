@@ -1,4 +1,3 @@
-
 package com.trenical.server.repository;
 
 import com.google.gson.Gson;
@@ -6,17 +5,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.trenical.server.model.Biglietto;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BigliettoRepository {
 
-    private static final Path PATH = Path.of("data", "biglietti.json");
+    private static final Path PATH = Paths.get(System.getProperty("user.dir"), "server", "data", "biglietti.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Type LIST_TYPE = new TypeToken<List<Biglietto>>() {}.getType();
 
@@ -36,13 +33,20 @@ public class BigliettoRepository {
         }
     }
 
-    public static void salvaBiglietto(Biglietto biglietto) {
+    public static synchronized void salvaBiglietto(Biglietto biglietto) {
+        // Validazione userId
+        if (biglietto.getUserId() == null || biglietto.getUserId().isEmpty()) {
+            throw new IllegalArgumentException("UserId mancante per il biglietto: " + biglietto.getId());
+        }
+        List<Biglietto> lista = caricaBiglietti();
+        lista.add(biglietto);
+
         try {
-            List<Biglietto> lista = caricaBiglietti();
-            lista.add(biglietto);
-            try (FileWriter writer = new FileWriter(PATH.toFile())) {
-                GSON.toJson(lista, writer);
-            }
+            String json = GSON.toJson(lista);
+            // Scrittura atomica su file temporaneo
+            Path temp = Files.createTempFile(PATH.getParent(), "biglietti", ".json");
+            Files.writeString(temp, json, StandardOpenOption.WRITE);
+            Files.move(temp, PATH, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("💾 [LOG] Biglietto salvato: " + biglietto.getId());
         } catch (IOException e) {
             System.err.println("❌ [ERRORE] Salvataggio biglietto fallito: " + e.getMessage());
@@ -52,7 +56,7 @@ public class BigliettoRepository {
     public static List<Biglietto> getByUserId(String userId) {
         List<Biglietto> biglietti = caricaBiglietti().stream()
                 .filter(b -> b.getUserId().equals(userId))
-                .collect(Collectors.toList());
+                .toList();
         System.out.println("🔎 [LOG] Biglietti per " + userId + ": " + biglietti.size());
         return biglietti;
     }

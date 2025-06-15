@@ -21,11 +21,23 @@ public class Treno {
         return partenza;
     }
 
+    public void setPartenza(String partenza) {
+        this.partenza = partenza;
+    }
+
     public String getArrivo() {
         return arrivo;
     }
 
+    public void setArrivo(String arrivo) {
+        this.arrivo = arrivo;
+    }
+
     public String getOrario() {
         return orario;
+    }
+
+    public void setOrario(String orario) {
+        this.orario = orario;
     }
 }

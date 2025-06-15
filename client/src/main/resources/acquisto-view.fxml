@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
@@ -8,7 +7,15 @@
       fx:controller="com.trenical.client.controller.AcquistoController"
       alignment="CENTER" spacing="10" style="-fx-padding: 20;">
 
-    <TextField fx:id="trattaField" promptText="ID Tratta (es. T-001)"/>
-    <TextField fx:id="dataField" promptText="Data (es. 2025-06-11)"/>
-    <Button text="Acquista Biglietto" onAction="#onAcquista"/>
+    <!-- Label per mostrare la tratta selezionata -->
+    <Label fx:id="trattaLabel" text="Tratta selezionata: -"/>
+
+    <!-- Label per mostrare il prezzo -->
+    <Label fx:id="prezzoLabel" text="Prezzo: -"/>
+
+    <!-- DatePicker per scegliere la data -->
+    <DatePicker fx:id="dataPicker"/>
+
+    <!-- Bottone che richiama onConfirmAcquisto() -->
+    <Button text="Conferma Acquisto" onAction="#onConfirmAcquisto"/>
 </VBox>

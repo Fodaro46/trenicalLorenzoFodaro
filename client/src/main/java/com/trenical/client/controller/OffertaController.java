@@ -13,11 +13,13 @@ import javafx.scene.control.Label;
 
 public class OffertaController {
 
-    private Tratta tratta;
-    private ManagedChannel channel;
+    @FXML private Label prezzoLabel;
+    @FXML private Label descrizioneLabel;
 
-    public void setContesto(Tratta tratta) {
-        this.tratta = tratta;
+    private Tratta tratta;
+
+    public void setContesto(Tratta grpcTratta) {
+        this.tratta = grpcTratta;
         calcolaOfferta();
     }
 
@@ -28,41 +30,35 @@ public class OffertaController {
         }
 
         String userId = SessionManager.getInstance().getCurrentUser().getUserId();
-        channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress("localhost", 50051)
                 .usePlaintext()
                 .build();
-        PromotionServiceGrpc.PromotionServiceBlockingStub stub =
-                PromotionServiceGrpc.newBlockingStub(channel);
 
         try {
-            OffertaResponse response = stub.getOfferta(
+            var stub = PromotionServiceGrpc.newBlockingStub(channel);
+            OffertaResponse resp = stub.getOfferta(
                     GetOffertaRequest.newBuilder()
                             .setUserId(userId)
                             .setTratta(tratta)
                             .build()
             );
-            prezzoLabel.setText("€ " + response.getPrezzoScontato());
-            descrizioneLabel.setText(response.getDescrizione());
+            prezzoLabel.setText("€ " + resp.getPrezzoScontato());
+            descrizioneLabel.setText(resp.getDescrizione());
         } catch (Exception e) {
             prezzoLabel.setText("-");
             descrizioneLabel.setText("Errore durante il calcolo");
-            showAlert("Errore", e.getMessage());
+            showAlert("Errore promozione", e.getMessage());
         } finally {
-            if (channel != null && !channel.isShutdown()) {
-                channel.shutdownNow();
-            }
+            channel.shutdownNow(); // chiusura sicura
         }
     }
 
-    @FXML
-    private Label prezzoLabel;
-    @FXML private Label descrizioneLabel;
-
     private void showAlert(String title, String msg) {
-        Alert a = new Alert(Alert.AlertType.ERROR);
+        Alert a = new Alert(Alert.AlertType.ERROR, msg);
         a.setTitle(title);
         a.setHeaderText(null);
-        a.setContentText(msg);
         a.showAndWait();
     }
 }

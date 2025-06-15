@@ -1,6 +1,5 @@
 package com.trenical.client.controller;
 
-import com.trenical.client.model.Tratta;
 import com.trenical.client.model.User;
 import com.trenical.client.session.SessionManager;
 import com.trenical.grpc.*;
@@ -9,10 +8,9 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 
 import java.util.logging.Level;
@@ -34,91 +32,57 @@ public class LoginController {
             return;
         }
 
-        channel = ManagedChannelBuilder.forAddress("localhost", 50051)
-                .usePlaintext()
-                .build();
-
-        TrenicalServiceGrpc.TrenicalServiceBlockingStub stub = TrenicalServiceGrpc.newBlockingStub(channel);
-        TrenicalServiceGrpc.TrenicalServiceStub asyncStub = TrenicalServiceGrpc.newStub(channel);
+        channel = ManagedChannelBuilder.forAddress("localhost", 50051).usePlaintext().build();
+        var blockingStub = TrenicalServiceGrpc.newBlockingStub(channel);
+        var asyncStub    = TrenicalServiceGrpc.newStub(channel);
 
         try {
-            //gRPC
-            LoginRequest request = LoginRequest.newBuilder()
-                    .setEmail(email)
-                    .build();
+            LoginResponse response = blockingStub.login(LoginRequest.newBuilder().setEmail(email).build());
 
-            System.out.println("🔐 Tentativo login con email: " + email);
-            LoginResponse response = stub.login(request);
+            User user = new User(response.getUserId(), email);
+            SessionManager.getInstance().login(user);
 
-            // Salva utente nella sessione
-            SessionManager.getInstance().login(new User(response.getUserId(), email));
+            resultLabel.setWrapText(true);
+            resultLabel.setText("Utente: " + email + "\n" + response.getMessage());
 
-            resultLabel.setText("Utente: " + response.getUserId() + "\n" + response.getMessage());
-
-            // Stream notifiche
-            NotificheRequest notifRequest = NotificheRequest.newBuilder()
-                    .setUserId(response.getUserId())
-                    .build();
-
-            asyncStub.streamNotifiche(notifRequest, new StreamObserver<Notifica>() {
-                @Override
-                public void onNext(Notifica notifica) {
-                    Platform.runLater(() ->
-                            resultLabel.setText("📩 " + notifica.getMessaggio() + " @ " + notifica.getTimestamp())
-                    );
-                }
-
-                @Override
-                public void onError(Throwable t) {
-                    LOGGER.log(Level.SEVERE, "Errore stream notifiche", t);
-                }
-
-                @Override
-                public void onCompleted() {
-                    LOGGER.info("✅ Stream notifiche completato.");
-                }
+            resultLabel.setMouseTransparent(false);
+            resultLabel.setOnMouseClicked(e -> {
+                var content = new ClipboardContent();
+                content.putString(email);
+                javafx.scene.input.Clipboard.getSystemClipboard().setContent(content);
             });
 
-            // Mostra la finestra offerta
-            mostraOffertaDemo();
+            asyncStub.streamNotifiche(
+                    NotificheRequest.newBuilder().setUserId(response.getUserId()).build(),
+                    new StreamObserver<>() {
+                        @Override
+                        public void onNext(Notifica n) {
+                            LOGGER.info("📥 [CLIENT] Ricevuta notifica: " + n.getMessaggio());
+                            SessionManager.getInstance().aggiungiNotifica(n);
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            LOGGER.log(Level.SEVERE, "Errore stream notifiche", t);
+                        }
+
+                        @Override
+                        public void onCompleted() {
+                            LOGGER.info("📴 [STREAM] Fine stream notifiche per userId: " + response.getUserId());
+                        }
+                    }
+            );
+
+            Stage stage = (Stage) resultLabel.getScene().getWindow();
+            stage.setOnHiding(ev -> {
+                if (channel != null && !channel.isShutdown()) {
+                    channel.shutdownNow();
+                }
+            });
 
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Errore durante il login", e);
             Platform.runLater(() -> resultLabel.setText("Errore durante il login: " + e.getMessage()));
-        }
-    }
-
-    private void mostraOffertaDemo() {
-        try {
-            // Tratta demo reale da passare
-            com.trenical.grpc.Tratta trattaDemo = com.trenical.grpc.Tratta.newBuilder()
-                    .setId("T-001")
-                    .setStazionePartenza("Milano")
-                    .setStazioneArrivo("Roma")
-                    .setOrarioPartenza("15:30")
-                    .setOrarioArrivo("18:45")
-                    .setPrezzo(89.99)
-                    .build();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/offerta.fxml"));
-            Scene scene = new Scene(loader.load());
-
-            OffertaController controller = loader.getController();
-            controller.setContesto(trattaDemo); // ✅ Passaggio reale
-
-            Stage stage = new Stage();
-            stage.setTitle("Offerta Attiva");
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Errore nel caricamento della schermata offerta", e);
-        }
-    }
-
-    public void shutdown() {
-        if (channel != null && !channel.isShutdown()) {
-            channel.shutdown();
         }
     }
 }

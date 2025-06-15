@@ -43,5 +43,59 @@
     "arrivo": "bologna",
     "prezzo": 20.0,
     "timestamp": ""
+  },
+  {
+    "id": "48df14a5-1e8b-48ee-85bc-0ff1561c8152",
+    "userId": "",
+    "trattaId": "1",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 20.0,
+    "timestamp": ""
+  },
+  {
+    "id": "c1d7957a-eb41-4586-9026-0f81003d2256",
+    "userId": "user-1140648639",
+    "trattaId": "1",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 20.0,
+    "timestamp": "2025-06-13"
+  },
+  {
+    "id": "445b5d8d-63cc-4aec-a630-82be3b23fa0a",
+    "userId": "user-382460618",
+    "trattaId": "1",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 20.0,
+    "timestamp": "2025-06-18"
+  },
+  {
+    "id": "63380bfe-28ce-416f-9d57-f5d6c32895c8",
+    "userId": "user-382460618",
+    "trattaId": "1",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 20.0,
+    "timestamp": "2025-06-14"
+  },
+  {
+    "id": "B-1038704512-1749920767595",
+    "userId": "user-1140648639",
+    "trattaId": "1",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 17.0,
+    "timestamp": "2025-06-14"
+  },
+  {
+    "id": "B-1038704512-1749922134351",
+    "userId": "user-1140648639",
+    "trattaId": "1",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 17.0,
+    "timestamp": "2025-06-15"
   }
 ]

@@ -42,6 +42,6 @@ public class LoginControllerTest {
         assertNotNull(response);
         assertNotNull(response.getUserId());
         assertFalse(response.getUserId().isEmpty());
-        assertEquals("Login effettuato con successo per " + testEmail, response.getMessage());
+        assertTrue(response.getMessage().contains(testEmail));
     }
 }

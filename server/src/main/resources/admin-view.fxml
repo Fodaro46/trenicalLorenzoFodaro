@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.trenical.server.controller.AdminController">
 
     <top>
-        <Label text="Pannello Amministratore" style="-fx-font-size: 20px; -fx-padding: 10px;" />
+        <Label text="Pannello Amministratore"
+               style="-fx-font-size: 20px; -fx-padding: 10px;" />
     </top>
 
     <center>
-        <TableView fx:id="trenoTable">
+        <TableView fx:id="trattaTable">
             <columns>
                 <TableColumn fx:id="codiceColumn" text="Codice" />
                 <TableColumn fx:id="partenzaColumn" text="Partenza" />
                 <TableColumn fx:id="arrivoColumn" text="Arrivo" />
-                <TableColumn fx:id="orarioColumn" text="Orario" />
+                <TableColumn fx:id="orarioPartenzaColumn" text="Orario Partenza" />
+                <TableColumn fx:id="orarioArrivoColumn" text="Orario Arrivo" />
+                <TableColumn fx:id="prezzoColumn" text="Prezzo" />
             </columns>
         </TableView>
     </center>
 
     <bottom>
-        <HBox spacing="10">
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-            <children>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <HBox spacing="10">
                 <TextField fx:id="codiceField" promptText="Codice" />
                 <TextField fx:id="partenzaField" promptText="Partenza" />
                 <TextField fx:id="arrivoField" promptText="Arrivo" />
-                <TextField fx:id="orarioField" promptText="Orario" />
-                <Button text="Aggiungi Treno" onAction="#aggiungiTreno" />
-            </children>
-        </HBox>
+                <TextField fx:id="orarioPartenzaField" promptText="Orario Partenza" />
+                <TextField fx:id="orarioArrivoField" promptText="Orario Arrivo" />
+                <TextField fx:id="prezzoField" promptText="Prezzo" />
+            </HBox>
+            <HBox spacing="10">
+                <Button text="Aggiungi Tratta" onAction="#aggiungiTratta" />
+                <Button text="Aggiorna Tratta" onAction="#aggiornaTratta" />
+            </HBox>
+        </VBox>
     </bottom>
+
 </BorderPane>

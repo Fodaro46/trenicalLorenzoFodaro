@@ -9,6 +9,15 @@
       spacing="10" alignment="CENTER"
       style="-fx-padding: 20;">
 
-    <Label text="📬 Notifiche in tempo reale"/>
-    <TextArea fx:id="notificheArea" prefHeight="300" prefWidth="500" wrapText="true" editable="false"/>
+    <Label text="📬 Notifiche in tempo reale" />
+
+    <TextArea fx:id="notificheArea"
+              prefHeight="300"
+              prefWidth="500"
+              wrapText="true"
+              editable="false" />
+
+    <Button text="🔄 Ricarica"
+            onAction="#aggiornaNotifiche"
+            prefWidth="150"/>
 </VBox>

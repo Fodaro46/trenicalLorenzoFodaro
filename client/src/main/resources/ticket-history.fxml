@@ -17,6 +17,7 @@
             <TableColumn fx:id="colTratta" text="Tratta"/>
             <TableColumn fx:id="colData" text="Data"/>
             <TableColumn fx:id="colStato" text="Stato"/>
+            <TableColumn fx:id="colPrezzo" text="Prezzo"/>
         </columns>
     </TableView>
 </VBox>

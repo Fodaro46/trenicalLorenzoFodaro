@@ -11,16 +11,18 @@ public class TicketFactory {
                 response.getBigliettoId(),
                 tratta,
                 data,
-                response.getStato()
+                response.getStato(),
+                response.getPrezzo()
         );
     }
 
     public static Ticket fromTicketResponse(TicketResponse response) {
         return new Ticket(
                 response.getTicketId(),
-                response.getTrainNumber(),
-                response.getDepartureTime(),
-                "Confermato"
+                response.getTrainNumber(),       // usare come "tratta"
+                response.getDepartureTime(),     // usare come "data"
+                "Confermato",                    // nessuno stato nel response
+                response.getPrezzo()             // AGGIUNTO: prezzo dal server
         );
     }
 }

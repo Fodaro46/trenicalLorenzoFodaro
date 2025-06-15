@@ -1,73 +1,158 @@
 package com.trenical.server.controller;
 
-import com.trenical.server.model.Treno;
+import com.trenical.grpc.Notifica;
 import com.trenical.server.model.Tratta;
+import com.trenical.server.model.Utente;
+import com.trenical.server.repository.BigliettoRepository;
 import com.trenical.server.repository.TrattaRepository;
+import com.trenical.server.repository.UtenteRepository;
+import com.trenical.server.util.NotificationRegistry;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class AdminController {
 
     @FXML private TextField codiceField;
     @FXML private TextField partenzaField;
     @FXML private TextField arrivoField;
-    @FXML private TextField orarioField;
-    @FXML private TableView<Treno> trenoTable;
-    @FXML private TableColumn<Treno, String> codiceColumn;
-    @FXML private TableColumn<Treno, String> partenzaColumn;
-    @FXML private TableColumn<Treno, String> arrivoColumn;
-    @FXML private TableColumn<Treno, String> orarioColumn;
+    @FXML private TextField orarioPartenzaField;
+    @FXML private TextField orarioArrivoField;
+    @FXML private TextField prezzoField;
 
-    private final ObservableList<Treno> treni = FXCollections.observableArrayList();
+    @FXML private TableView<Tratta> trattaTable;
+    @FXML private TableColumn<Tratta, String> codiceColumn;
+    @FXML private TableColumn<Tratta, String> partenzaColumn;
+    @FXML private TableColumn<Tratta, String> arrivoColumn;
+    @FXML private TableColumn<Tratta, String> orarioPartenzaColumn;
+    @FXML private TableColumn<Tratta, String> orarioArrivoColumn;
+    @FXML private TableColumn<Tratta, String> prezzoColumn;
+
+    private final ObservableList<Tratta> tratte = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        codiceColumn.setCellValueFactory(cd ->
-                new javafx.beans.property.SimpleStringProperty(cd.getValue().getCodice()));
-        partenzaColumn.setCellValueFactory(cd ->
-                new javafx.beans.property.SimpleStringProperty(cd.getValue().getPartenza()));
-        arrivoColumn.setCellValueFactory(cd ->
-                new javafx.beans.property.SimpleStringProperty(cd.getValue().getArrivo()));
-        orarioColumn.setCellValueFactory(cd ->
-                new javafx.beans.property.SimpleStringProperty(cd.getValue().getOrario()));
-        trenoTable.setItems(treni);
+        codiceColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getId()));
+        partenzaColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getStazionePartenza()));
+        arrivoColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getStazioneArrivo()));
+        orarioPartenzaColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getOrarioPartenza()));
+        orarioArrivoColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getOrarioArrivo()));
+        prezzoColumn.setCellValueFactory(cd -> new SimpleStringProperty("€ " + cd.getValue().getPrezzo()));
+
+        trattaTable.setItems(tratte);
+
+        tratte.setAll(TrattaRepository.caricaTratte());
+
+        trattaTable.getSelectionModel().selectedItemProperty()
+                .addListener((obs, old, sel) -> {
+                    if (sel != null) {
+                        codiceField.setText(sel.getId());
+                        partenzaField.setText(sel.getStazionePartenza());
+                        arrivoField.setText(sel.getStazioneArrivo());
+                        orarioPartenzaField.setText(sel.getOrarioPartenza());
+                        orarioArrivoField.setText(sel.getOrarioArrivo());
+                        prezzoField.setText(String.valueOf(sel.getPrezzo()));
+                    }
+                });
     }
 
     @FXML
-    public void aggiungiTreno() {
-        String codice  = codiceField.getText().trim();
+    public void aggiungiTratta() {
+        String codice = codiceField.getText().trim();
         String partenza = partenzaField.getText().trim();
-        String arrivo   = arrivoField.getText().trim();
-        String orario   = orarioField.getText().trim();
+        String arrivo = arrivoField.getText().trim();
+        String orarioPartenza = orarioPartenzaField.getText().trim();
+        String orarioArrivo = orarioArrivoField.getText().trim();
+        String prezzoStr = prezzoField.getText().trim();
 
-        if (codice.isEmpty() || partenza.isEmpty() || arrivo.isEmpty() || orario.isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "Compila tutti i campi.").showAndWait();
+        if (codice.isEmpty() || partenza.isEmpty() || arrivo.isEmpty() ||
+                orarioPartenza.isEmpty() || orarioArrivo.isEmpty() || prezzoStr.isEmpty()) {
+            showAlert("Compila tutti i campi.");
             return;
         }
 
-        // Aggiorno la tabella interna
-        Treno t = new Treno(codice, partenza, arrivo, orario);
-        treni.add(t);
+        double prezzo;
+        try {
+            prezzo = Double.parseDouble(prezzoStr);
+        } catch (NumberFormatException e) {
+            showAlert("Prezzo non valido.");
+            return;
+        }
 
-        // Creo il modello Tratta e lo salvo su file
-        Tratta trattaModel = new Tratta(
-                codice,            // id della tratta
-                partenza,          // stazionePartenza
-                arrivo,            // stazioneArrivo
-                orario,            // orarioPartenza
-                orario,            // orarioArrivo (o aggiungi un TextField dedicato)
-                20.0               // prezzo fisso per ora
-        );
-        TrattaRepository.aggiungiTratta(trattaModel);
+        Tratta nuova = new Tratta(codice, partenza, arrivo, orarioPartenza, orarioArrivo, prezzo);
+        tratte.add(nuova);
+        TrattaRepository.aggiungiTratta(nuova);
 
-        // Pulisco i campi
+        clearFields();
+        showInfo("Tratta aggiunta!");
+    }
+
+    @FXML
+    public void aggiornaTratta() {
+        Tratta sel = trattaTable.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            showAlert("Seleziona una tratta da modificare.");
+            return;
+        }
+
+        String partenza = partenzaField.getText().trim();
+        String arrivo = arrivoField.getText().trim();
+        String orarioPartenza = orarioPartenzaField.getText().trim();
+        String orarioArrivo = orarioArrivoField.getText().trim();
+        String prezzoStr = prezzoField.getText().trim();
+
+        double prezzo;
+        try {
+            prezzo = Double.parseDouble(prezzoStr);
+        } catch (NumberFormatException e) {
+            showAlert("Prezzo non valido.");
+            return;
+        }
+
+        sel.setStazionePartenza(partenza);
+        sel.setStazioneArrivo(arrivo);
+        sel.setOrarioPartenza(orarioPartenza);
+        sel.setOrarioArrivo(orarioArrivo);
+        sel.setPrezzo(prezzo);
+
+        TrattaRepository.salvaTratte(tratte);
+        trattaTable.refresh();
+        clearFields();
+        showInfo("Tratta aggiornata!");
+
+        for (Utente u : UtenteRepository.caricaTutti()) {
+            boolean haTratta = BigliettoRepository.getByUserId(u.getUserId()).stream()
+                    .anyMatch(b -> b.getTrattaId().equals(sel.getId()));
+
+            if (haTratta) {
+                Notifica n = Notifica.newBuilder()
+                        .setMessaggio("🔄 Tratta aggiornata: " + sel.getStazionePartenza() + " → " + sel.getStazioneArrivo())
+                        .setTimestamp(LocalDateTime.now().toString())
+                        .build();
+                NotificationRegistry.addNotification(u.getUserId(), n);
+            }
+        }
+    }
+
+    private void clearFields() {
         codiceField.clear();
         partenzaField.clear();
         arrivoField.clear();
-        orarioField.clear();
+        orarioPartenzaField.clear();
+        orarioArrivoField.clear();
+        prezzoField.clear();
+    }
 
-        new Alert(Alert.AlertType.INFORMATION, "Tratta aggiunta con successo!").showAndWait();
+    private void showAlert(String msg) {
+        new Alert(Alert.AlertType.WARNING, msg).showAndWait();
+    }
+
+    private void showInfo(String msg) {
+        new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
     }
 }

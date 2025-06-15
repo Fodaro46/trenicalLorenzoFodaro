@@ -38,7 +38,8 @@ public class TicketController {
         resultArea.setText("ID: " + ticket.getTicketId() +
                 "\nTratta: " + ticket.getTratta() +
                 "\nData: " + ticket.getData() +
-                "\nStato: " + ticket.getStato());
+                "\nStato: " + ticket.getStato() +
+                "\nPrezzo: € " + String.format("%.2f", ticket.getPrezzo()));
 
         channel.shutdown();
     }
