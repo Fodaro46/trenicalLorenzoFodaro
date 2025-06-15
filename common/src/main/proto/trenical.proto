@@ -108,9 +108,10 @@ message NotificheRequest {
 }
 
 message Notifica {
-  string userId   = 1;
-  string messaggio = 2;
-  string timestamp = 3;
+  string id        = 1;
+  string userId    = 2;
+  string messaggio = 3;
+  string timestamp = 4;
 }
 
 

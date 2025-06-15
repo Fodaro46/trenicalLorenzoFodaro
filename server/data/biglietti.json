@@ -151,5 +151,266 @@
     "arrivo": "Reggio Calabria",
     "prezzo": 134.29999999999998,
     "timestamp": "2025-06-26"
+  },
+  {
+    "id": "B-2004262730-1749991004453",
+    "userId": "user-276798375",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-21"
+  },
+  {
+    "id": "B-1038704512-1749991176721",
+    "userId": "user-1140648639",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-27"
+  },
+  {
+    "id": "B-1038704512-1749992296428",
+    "userId": "user-1140648639",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 17.849999999999998,
+    "timestamp": "2025-06-27"
+  },
+  {
+    "id": "B-1038704512-1749992742190",
+    "userId": "user-1140648639",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-22"
+  },
+  {
+    "id": "B-1605149930-1749994432720",
+    "userId": "user-1750479081",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-28"
+  },
+  {
+    "id": "B-1286156366-1749994784251",
+    "userId": "user-178736316",
+    "trattaId": "11",
+    "partenza": "Milano",
+    "arrivo": "Reggio Calabria",
+    "prezzo": 118.5,
+    "timestamp": "2025-06-21"
+  },
+  {
+    "id": "B-1038704512-1749995441841",
+    "userId": "user-1140648639",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-20"
+  },
+  {
+    "id": "B-1038704512-1749995868407",
+    "userId": "user-1140648639",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 17.849999999999998,
+    "timestamp": "2025-06-26"
+  },
+  {
+    "id": "B-839661325-1749996491963",
+    "userId": "user-469237433",
+    "trattaId": "10",
+    "partenza": "catanzaro",
+    "arrivo": "lamezia",
+    "prezzo": 5.0915,
+    "timestamp": "2025-06-15"
+  },
+  {
+    "id": "B-1235727118-1749996852923",
+    "userId": "user-1409347505",
+    "trattaId": "10",
+    "partenza": "catanzaro",
+    "arrivo": "lamezia",
+    "prezzo": 5.0915,
+    "timestamp": "2025-06-21"
+  },
+  {
+    "id": "B-1235727118-1749996888556",
+    "userId": "user-1409347505",
+    "trattaId": "10",
+    "partenza": "catanzaro",
+    "arrivo": "lamezia",
+    "prezzo": 5.0915,
+    "timestamp": "2025-06-20"
+  },
+  {
+    "id": "B-1534180567-1749998529150",
+    "userId": "user-1713761793",
+    "trattaId": "11",
+    "partenza": "Milano",
+    "arrivo": "Reggio Calabria",
+    "prezzo": 118.5,
+    "timestamp": "2025-06-28"
+  },
+  {
+    "id": "B-1038704512-1749999517709",
+    "userId": "user-1140648639",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 15.75,
+    "timestamp": "2025-06-21"
+  },
+  {
+    "id": "B-1038704512-1749999608089",
+    "userId": "user-1140648639",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-21"
+  },
+  {
+    "id": "B-1038704512-1750001346569",
+    "userId": "user-1140648639",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-20"
+  },
+  {
+    "id": "B-1038704512-1750001451482",
+    "userId": "user-1140648639",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-28"
+  },
+  {
+    "id": "B-783006775-1750007482949",
+    "userId": "user-383565793",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 15.75,
+    "timestamp": "2025-06-16"
+  },
+  {
+    "id": "B-125591969-1750008629242",
+    "userId": "user-1086477413",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-28"
+  },
+  {
+    "id": "B-8032183-1750009781000",
+    "userId": "user-1817063445",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-22"
+  },
+  {
+    "id": "B-8032183-1750009938913",
+    "userId": "user-1817063445",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 15.75,
+    "timestamp": "2025-06-29"
+  },
+  {
+    "id": "B-919945881-1750010375583",
+    "userId": "user-10487193",
+    "trattaId": "8",
+    "partenza": "Catanzaro",
+    "arrivo": "Cosenza Castiglione",
+    "prezzo": 12.75,
+    "timestamp": "2025-06-28"
+  },
+  {
+    "id": "B-318993511-1750010944068",
+    "userId": "user-172999699",
+    "trattaId": "7",
+    "partenza": "cosenza",
+    "arrivo": "salerno",
+    "prezzo": 23.783,
+    "timestamp": "2025-06-20"
+  },
+  {
+    "id": "B-198699526-1750011132900",
+    "userId": "user-2044574073",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-27"
+  },
+  {
+    "id": "B-1198124570-1750011368584",
+    "userId": "user-1200751303",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-28"
+  },
+  {
+    "id": "B-1892058626-1750013012813",
+    "userId": "user-531919361",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-20"
+  },
+  {
+    "id": "B-2004262730-1750013569599",
+    "userId": "user-276798375",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 15.75,
+    "timestamp": "2025-06-21"
+  },
+  {
+    "id": "B-2004262730-1750014411126",
+    "userId": "user-276798375",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-28"
+  },
+  {
+    "id": "B-2004262730-1750015105759",
+    "userId": "user-276798375",
+    "trattaId": "9",
+    "partenza": "milano",
+    "arrivo": "bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-06-28"
+  },
+  {
+    "id": "B-2004262730-1750015142729",
+    "userId": "user-276798375",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 15.75,
+    "timestamp": "2025-06-21"
   }
 ]

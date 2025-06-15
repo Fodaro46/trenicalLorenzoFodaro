@@ -3,32 +3,48 @@
     "id": "12",
     "stazionePartenza": "catanzaro",
     "stazioneArrivo": "crotone",
-    "orarioPartenza": "17:00",
-    "orarioArrivo": "22:00",
+    "orarioPartenza": "18:10",
+    "orarioArrivo": "21:00",
     "prezzo": 21.0
   },
   {
     "id": "11",
     "stazionePartenza": "Milano",
     "stazioneArrivo": "Reggio Calabria",
-    "orarioPartenza": "11:14",
-    "orarioArrivo": "23:58",
+    "orarioPartenza": "12:15",
+    "orarioArrivo": "01:25",
     "prezzo": 158.0
   },
   {
     "id": "10",
     "stazionePartenza": "catanzaro",
     "stazioneArrivo": "lamezia",
-    "orarioPartenza": "8:25",
-    "orarioArrivo": "9:45",
+    "orarioPartenza": "19:00",
+    "orarioArrivo": "21:45",
     "prezzo": 5.99
   },
   {
     "id": "9",
     "stazionePartenza": "milano",
     "stazioneArrivo": "bologna",
-    "orarioPartenza": "12:30",
-    "orarioArrivo": "15:14",
+    "orarioPartenza": "19:00",
+    "orarioArrivo": "21:00",
     "prezzo": 45.0
+  },
+  {
+    "id": "8",
+    "stazionePartenza": "Catanzaro",
+    "stazioneArrivo": "Cosenza Castiglione",
+    "orarioPartenza": "5:50",
+    "orarioArrivo": "8:50",
+    "prezzo": 15.0
+  },
+  {
+    "id": "7",
+    "stazionePartenza": "cosenza",
+    "stazioneArrivo": "salerno",
+    "orarioPartenza": "6:50",
+    "orarioArrivo": "10:10",
+    "prezzo": 27.98
   }
 ]

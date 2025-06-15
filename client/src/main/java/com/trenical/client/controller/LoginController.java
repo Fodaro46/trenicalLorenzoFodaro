@@ -8,6 +8,9 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -41,11 +44,10 @@ public class LoginController {
         var asyncStub = TrenicalServiceGrpc.newStub(channel);
 
         try {
-            LoginResponse response = blockingStub.login(
-                    LoginRequest.newBuilder().setEmail(email).build()
-            );
+            LoginResponse response = blockingStub.login(LoginRequest.newBuilder().setEmail(email).build());
 
-            User user = new User(response.getUserId(), email);
+            String userId = response.getUserId();
+            User user = new User(userId, email);
             SessionManager.getInstance().login(user);
 
             resultLabel.setWrapText(true);
@@ -58,44 +60,13 @@ public class LoginController {
                 javafx.scene.input.Clipboard.getSystemClipboard().setContent(content);
             });
 
-            asyncStub.streamNotifiche(
-                    NotificheRequest.newBuilder()
-                            .setUserId(response.getUserId())
-                            .build(),
+            // ✅ Avvia stream notifiche gRPC
+            startNotificationStream(asyncStub, userId);
 
-                    new StreamObserver<>() {
-                        @Override
-                        public void onNext(Notifica n) {
-                            LOGGER.info("📥 [CLIENT] Ricevuta notifica:");
-                            LOGGER.info("     🧾 Messaggio: " + n.getMessaggio());
-                            LOGGER.info("     🕒 Timestamp: " + n.getTimestamp());
-                            LOGGER.info("     👤 userId:    " + n.getUserId());
+            // ✅ Apri subito GUI notifiche (il SessionManager gestirà automaticamente il reinvio)
+            Platform.runLater(this::apriNotificheGui);
 
-                            SessionManager.getInstance().aggiungiNotifica(n);
-
-                            Platform.runLater(() -> {
-                                resultLabel.setText(n.getMessaggio());
-
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("Nuova notifica ricevuta");
-                                alert.setHeaderText(null);
-                                alert.setContentText(n.getMessaggio());
-                                alert.show();
-                            });
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            LOGGER.log(Level.SEVERE, "Errore stream notifiche", t);
-                        }
-
-                        @Override
-                        public void onCompleted() {
-                            LOGGER.info("📴 [STREAM] Fine stream notifiche per userId: " + response.getUserId());
-                        }
-                    }
-            );
-
+            // 🔒 Chiudi canale gRPC alla chiusura finestra
             Stage stage = (Stage) resultLabel.getScene().getWindow();
             stage.setOnHiding(ev -> {
                 if (channel != null && !channel.isShutdown()) {
@@ -105,8 +76,65 @@ public class LoginController {
             });
 
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Errore durante il login", e);
+            LOGGER.log(Level.SEVERE, "❌ Errore durante il login", e);
             Platform.runLater(() -> resultLabel.setText("Errore durante il login: " + e.getMessage()));
+        }
+    }
+
+    private void startNotificationStream(TrenicalServiceGrpc.TrenicalServiceStub asyncStub, String userId) {
+        asyncStub.streamNotifiche(
+                NotificheRequest.newBuilder().setUserId(userId).build(),
+                new StreamObserver<>() {
+                    @Override
+                    public void onNext(Notifica n) {
+                        LOGGER.info("🆔 ID notifica ricevuta: " + (n.getId().isBlank() ? "❌ VUOTO" : n.getId()));
+                        LOGGER.info("📥 [CLIENT] Ricevuta notifica:");
+                        LOGGER.info("     🧾 Messaggio: " + n.getMessaggio());
+                        LOGGER.info("     🕒 Timestamp: " + n.getTimestamp());
+                        LOGGER.info("     👤 userId: " + n.getUserId());
+
+                        // Il SessionManager si occuperà automaticamente di:
+                        // 1. Salvare la notifica
+                        // 2. Notificare i listener attivi
+                        // 3. Gestire il reinvio per i listener futuri
+                        SessionManager.getInstance().aggiungiNotifica(n);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        LOGGER.log(Level.SEVERE, "❌ Errore stream notifiche", t);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        LOGGER.info("📴 [STREAM] Fine stream notifiche per userId: " + userId);
+                    }
+                }
+        );
+
+        LOGGER.info("🚀 [STREAM] Stream notifiche avviato per userId: " + userId);
+
+        // 🔧 OPZIONALE: Se vuoi forzare un reinvio manuale per debug
+        // Platform.runLater(() -> {
+        //     try {
+        //         Thread.sleep(2000); // Aspetta che la GUI si carichi
+        //         SessionManager.getInstance().forzaReinvioNotifiche();
+        //     } catch (InterruptedException ex) {
+        //         Thread.currentThread().interrupt();
+        //     }
+        // });
+    }
+
+    private void apriNotificheGui() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/notifiche.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("📬 Notifiche");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "❌ Errore nel caricamento finestra notifiche", e);
         }
     }
 }

@@ -7,6 +7,7 @@ import com.trenical.server.repository.BigliettoRepository;
 import com.trenical.server.repository.TrattaRepository;
 import com.trenical.server.repository.UtenteRepository;
 import com.trenical.server.util.NotificationRegistry;
+import com.trenical.server.util.StreamManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -133,16 +134,16 @@ public class AdminController {
 
             if (haTratta) {
                 Notifica n = Notifica.newBuilder()
-                        .setUserId(u.getUserId())  // 🔥 FONDAMENTALE
+                        .setUserId(u.getUserId())
                         .setMessaggio("🔄 Tratta aggiornata: " + sel.getStazionePartenza() + " → " + sel.getStazioneArrivo())
                         .setTimestamp(LocalDateTime.now().toString())
                         .build();
 
                 NotificationRegistry.addNotification(u.getUserId(), n);
-                System.out.println("📌 [LOG] Notifica inviata a " + u.getUserId() + ": " + n.getMessaggio());
             }
         }
     }
+
 
     private void clearFields() {
         codiceField.clear();

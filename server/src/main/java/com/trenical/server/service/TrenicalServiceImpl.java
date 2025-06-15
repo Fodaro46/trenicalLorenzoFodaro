@@ -9,11 +9,13 @@ import com.trenical.server.repository.TrattaRepository;
 import com.trenical.server.repository.UtenteRepository;
 import com.trenical.server.sconto.GestoreSconti;
 import com.trenical.server.util.NotificationRegistry;
+import com.trenical.server.util.StreamManager;
 import io.grpc.stub.StreamObserver;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImplBase {
 
@@ -92,10 +94,12 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
 
         NotificationRegistry.addNotification(userId,
                 Notifica.newBuilder()
+                        .setUserId(userId)  // 🔥 FONDAMENTALE PER FUNZIONARE
                         .setMessaggio("🎟️ Acquisto: " + scelta.getStazionePartenza() + "→" + scelta.getStazioneArrivo()
                                 + " il " + request.getData() + " | € " + String.format("%.2f", prezzoFinale))
                         .setTimestamp(LocalTime.now().toString())
-                        .build());
+                        .build()
+        );
 
         BigliettoResponse response = BigliettoResponse.newBuilder()
                 .setBigliettoId(biglietto.getId())
@@ -167,40 +171,33 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
     @Override
     public void streamNotifiche(NotificheRequest request, StreamObserver<Notifica> responseObserver) {
         String userId = request.getUserId();
-        System.out.println("📤 [STREAM] Avvio stream notifiche per userId: " + userId);
+        System.out.println("📤 [STREAM] Connessione notifiche per userId: " + userId);
+        StreamManager.registra(userId, responseObserver);
 
-        new Thread(() -> {
-            List<Notifica> inviate = new ArrayList<>(NotificationRegistry.getNotifications(userId));
-            System.out.println("📤 [STREAM] Inviate " + inviate.size() + " notifiche pregresse");
+        // ⏳ Invia solo se il canale è attivo, salva solo ID non vuoti
+        List<Notifica> pending = NotificationRegistry.getUnreadNotifications(userId);
+        int inviate = 0;
 
+        for (Notifica n : pending) {
             try {
-                // Invia tutte le notifiche pregresse immediatamente
-                for (Notifica n : inviate) {
-                    System.out.println("📤 [STREAM] Notifica pregressa: " + n.getMessaggio());
-                    responseObserver.onNext(n);
+                if (n.getId().isBlank()) {
+                    System.out.println("⚠️ [FIX] Assegnato nuovo ID a notifica pendente per " + userId);
+                    n = n.toBuilder().setId(UUID.randomUUID().toString()).build();
                 }
-
-                // Poll continuo per nuove notifiche
-                while (true) {
-                    Thread.sleep(1000);
-                    List<Notifica> aggiornate = NotificationRegistry.getNotifications(userId);
-                    if (aggiornate.size() > inviate.size()) {
-                        for (int i = inviate.size(); i < aggiornate.size(); i++) {
-                            Notifica nuova = aggiornate.get(i);
-                            System.out.println("📤 [STREAM] Nuova notifica: " + nuova.getMessaggio());
-                            responseObserver.onNext(nuova);
-                        }
-                        inviate = new ArrayList<>(aggiornate);
-                    }
-                }
+                responseObserver.onNext(n);
+                inviate++;
             } catch (Exception e) {
-                System.err.println("❌ [STREAM] Errore thread stream notifiche: " + e.getMessage());
-            } finally {
-                responseObserver.onCompleted();
-                System.out.println("📴 [STREAM] Fine stream notifiche per userId: " + userId);
+                System.err.println("❌ Errore invio notifica pregressa: " + e.getMessage());
             }
-        }).start();
+        }
+
+        if (inviate > 0) {
+            System.out.println("📬 Inviate " + inviate + " notifiche pregresse a " + userId);
+            NotificationRegistry.markAllAsRead(userId); // solo se almeno una è partita
+        }
     }
+
+
 
 
     @Override
