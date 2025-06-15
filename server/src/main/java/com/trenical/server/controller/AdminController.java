@@ -125,16 +125,21 @@ public class AdminController {
         clearFields();
         showInfo("Tratta aggiornata!");
 
+        var tuttiIBiglietti = BigliettoRepository.caricaBiglietti();
+
         for (Utente u : UtenteRepository.caricaTutti()) {
-            boolean haTratta = BigliettoRepository.getByUserId(u.getUserId()).stream()
-                    .anyMatch(b -> b.getTrattaId().equals(sel.getId()));
+            boolean haTratta = tuttiIBiglietti.stream()
+                    .anyMatch(b -> b.getUserId().equals(u.getUserId()) && b.getTrattaId().equals(sel.getId()));
 
             if (haTratta) {
                 Notifica n = Notifica.newBuilder()
+                        .setUserId(u.getUserId())  // 🔥 FONDAMENTALE
                         .setMessaggio("🔄 Tratta aggiornata: " + sel.getStazionePartenza() + " → " + sel.getStazioneArrivo())
                         .setTimestamp(LocalDateTime.now().toString())
                         .build();
+
                 NotificationRegistry.addNotification(u.getUserId(), n);
+                System.out.println("📌 [LOG] Notifica inviata a " + u.getUserId() + ": " + n.getMessaggio());
             }
         }
     }

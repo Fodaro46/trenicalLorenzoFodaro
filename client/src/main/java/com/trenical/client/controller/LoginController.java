@@ -8,6 +8,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
@@ -32,12 +33,17 @@ public class LoginController {
             return;
         }
 
-        channel = ManagedChannelBuilder.forAddress("localhost", 50051).usePlaintext().build();
+        channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+                .usePlaintext()
+                .build();
+
         var blockingStub = TrenicalServiceGrpc.newBlockingStub(channel);
-        var asyncStub    = TrenicalServiceGrpc.newStub(channel);
+        var asyncStub = TrenicalServiceGrpc.newStub(channel);
 
         try {
-            LoginResponse response = blockingStub.login(LoginRequest.newBuilder().setEmail(email).build());
+            LoginResponse response = blockingStub.login(
+                    LoginRequest.newBuilder().setEmail(email).build()
+            );
 
             User user = new User(response.getUserId(), email);
             SessionManager.getInstance().login(user);
@@ -53,12 +59,29 @@ public class LoginController {
             });
 
             asyncStub.streamNotifiche(
-                    NotificheRequest.newBuilder().setUserId(response.getUserId()).build(),
+                    NotificheRequest.newBuilder()
+                            .setUserId(response.getUserId())
+                            .build(),
+
                     new StreamObserver<>() {
                         @Override
                         public void onNext(Notifica n) {
-                            LOGGER.info("📥 [CLIENT] Ricevuta notifica: " + n.getMessaggio());
+                            LOGGER.info("📥 [CLIENT] Ricevuta notifica:");
+                            LOGGER.info("     🧾 Messaggio: " + n.getMessaggio());
+                            LOGGER.info("     🕒 Timestamp: " + n.getTimestamp());
+                            LOGGER.info("     👤 userId:    " + n.getUserId());
+
                             SessionManager.getInstance().aggiungiNotifica(n);
+
+                            Platform.runLater(() -> {
+                                resultLabel.setText(n.getMessaggio());
+
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Nuova notifica ricevuta");
+                                alert.setHeaderText(null);
+                                alert.setContentText(n.getMessaggio());
+                                alert.show();
+                            });
                         }
 
                         @Override
@@ -76,6 +99,7 @@ public class LoginController {
             Stage stage = (Stage) resultLabel.getScene().getWindow();
             stage.setOnHiding(ev -> {
                 if (channel != null && !channel.isShutdown()) {
+                    LOGGER.info("🔻 Arresto canale gRPC client");
                     channel.shutdownNow();
                 }
             });

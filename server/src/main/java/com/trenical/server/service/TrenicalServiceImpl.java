@@ -12,6 +12,7 @@ import com.trenical.server.util.NotificationRegistry;
 import io.grpc.stub.StreamObserver;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImplBase {
@@ -169,16 +170,18 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
         System.out.println("📤 [STREAM] Avvio stream notifiche per userId: " + userId);
 
         new Thread(() -> {
-            List<Notifica> inviate = NotificationRegistry.getNotifications(userId);
+            List<Notifica> inviate = new ArrayList<>(NotificationRegistry.getNotifications(userId));
             System.out.println("📤 [STREAM] Inviate " + inviate.size() + " notifiche pregresse");
 
             try {
+                // Invia tutte le notifiche pregresse immediatamente
                 for (Notifica n : inviate) {
+                    System.out.println("📤 [STREAM] Notifica pregressa: " + n.getMessaggio());
                     responseObserver.onNext(n);
                 }
 
-                int tentativi = 60;
-                while (tentativi-- > 0) {
+                // Poll continuo per nuove notifiche
+                while (true) {
                     Thread.sleep(1000);
                     List<Notifica> aggiornate = NotificationRegistry.getNotifications(userId);
                     if (aggiornate.size() > inviate.size()) {
@@ -187,7 +190,7 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
                             System.out.println("📤 [STREAM] Nuova notifica: " + nuova.getMessaggio());
                             responseObserver.onNext(nuova);
                         }
-                        inviate = aggiornate;
+                        inviate = new ArrayList<>(aggiornate);
                     }
                 }
             } catch (Exception e) {
@@ -198,6 +201,7 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
             }
         }).start();
     }
+
 
     @Override
     public void getTicketInfo(TicketRequest request, StreamObserver<TicketResponse> responseObserver) {
