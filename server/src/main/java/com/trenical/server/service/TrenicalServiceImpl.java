@@ -1,6 +1,21 @@
 package com.trenical.server.service;
 
-import com.trenical.grpc.*;
+import com.google.protobuf.Empty;
+import com.trenical.grpc.CercaTratteRequest;
+import com.trenical.grpc.CercaTratteResponse;
+import com.trenical.grpc.BigliettoRequest;
+import com.trenical.grpc.BigliettoResponse;
+import com.trenical.grpc.LoginRequest;
+import com.trenical.grpc.LoginResponse;
+import com.trenical.grpc.NotificheRequest;
+import com.trenical.grpc.Notifica;
+import com.trenical.grpc.TicketRequest;
+import com.trenical.grpc.TicketResponse;
+import com.trenical.grpc.TrenicalServiceGrpc;
+import com.trenical.grpc.UpdateTrattaRequest;
+import com.trenical.grpc.UserIdRequest;
+import com.trenical.grpc.StoricoBigliettiResponse;
+import com.trenical.grpc.BigliettoInfo;
 import com.trenical.server.model.Biglietto;
 import com.trenical.server.model.Tratta;
 import com.trenical.server.model.Utente;
@@ -12,120 +27,92 @@ import com.trenical.server.util.NotificationRegistry;
 import com.trenical.server.util.StreamManager;
 import io.grpc.stub.StreamObserver;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImplBase {
 
     @Override
-    public void login(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
-        String email = request.getEmail();
-        System.out.println("🔐 [LOGIN] Tentativo con email: " + email);
-
-        Utente utente = UtenteRepository.caricaPerEmail(email);
-        if (utente == null) {
-            String userId = "user-" + Math.abs(email.hashCode());
-            utente = new Utente(userId, email);
-            UtenteRepository.salvaUtente(utente);
-            System.out.println("➕ [LOGIN] Nuovo utente creato: " + userId);
-        } else {
-            System.out.println("✅ [LOGIN] Utente esistente: " + utente.getUserId());
+    public void login(LoginRequest req, StreamObserver<LoginResponse> obs) {
+        String email = req.getEmail();
+        Utente u = UtenteRepository.caricaPerEmail(email);
+        if (u == null) {
+            String id = "user-" + Math.abs(email.hashCode());
+            u = new Utente(id, email);
+            UtenteRepository.salvaUtente(u);
         }
-
-        LoginResponse response = LoginResponse.newBuilder()
-                .setUserId(utente.getUserId())
-                .setMessage("✅ Login effettuato per " + utente.getEmail())
+        LoginResponse resp = LoginResponse.newBuilder()
+                .setUserId(u.getUserId())
+                .setMessage("✅ Login effettuato per " + u.getEmail())
                 .build();
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        obs.onNext(resp);
+        obs.onCompleted();
     }
 
     @Override
-    public void acquistaBiglietto(BigliettoRequest request, StreamObserver<BigliettoResponse> responseObserver) {
-        String userId = request.getUserId();
-        String idTratta = request.getTratta();
-
-        System.out.println("🛒 [ACQUISTO] Richiesta da user " + userId + " per tratta " + idTratta);
-
+    public void acquistaBiglietto(BigliettoRequest req, StreamObserver<BigliettoResponse> obs) {
+        String uid = req.getUserId();
         Tratta scelta = TrattaRepository.caricaTratte().stream()
-                .filter(t -> t.getId().equals(idTratta))
-                .findFirst()
-                .orElse(null);
-
+                .filter(t -> t.getId().equals(req.getTratta()))
+                .findFirst().orElse(null);
         if (scelta == null) {
-            System.out.println("❌ [ACQUISTO] Tratta non trovata: " + idTratta);
-            responseObserver.onNext(BigliettoResponse.newBuilder()
+            obs.onNext(BigliettoResponse.newBuilder()
                     .setBigliettoId("ERR")
                     .setStato("❌ Tratta non trovata")
-                    .setPrezzo(0.0)
+                    .setPrezzo(0)
                     .build());
-            responseObserver.onCompleted();
+            obs.onCompleted();
             return;
         }
-
-        com.trenical.grpc.Tratta trattaGrpc = com.trenical.grpc.Tratta.newBuilder()
-                .setId(scelta.getId())
-                .setStazionePartenza(scelta.getStazionePartenza())
-                .setStazioneArrivo(scelta.getStazioneArrivo())
-                .setOrarioPartenza(scelta.getOrarioPartenza())
-                .setOrarioArrivo(scelta.getOrarioArrivo())
-                .setPrezzo(scelta.getPrezzo())
-                .setData(request.getData())
-                .build();
-
-        GestoreSconti gestore = new GestoreSconti();
-        double prezzoFinale = gestore.calcolaMiglioreOfferta(trattaGrpc, userId).getPrezzoScontato();
-
-        Biglietto biglietto = new Biglietto(
-                "B-" + Math.abs(userId.hashCode()) + "-" + System.currentTimeMillis(),
-                userId,
-                scelta.getId(),
-                scelta.getStazionePartenza(),
-                scelta.getStazioneArrivo(),
-                prezzoFinale,
-                request.getData()
-        );
-
-        BigliettoRepository.salvaBiglietto(biglietto);
-        System.out.println("✅ [ACQUISTO] Biglietto salvato: " + biglietto.getId());
-
-        NotificationRegistry.addNotification(userId,
+        double prezzo = new GestoreSconti()
+                .calcolaMiglioreOfferta(
+                        com.trenical.grpc.Tratta.newBuilder()
+                                .setId(scelta.getId())
+                                .setStazionePartenza(scelta.getStazionePartenza())
+                                .setStazioneArrivo(scelta.getStazioneArrivo())
+                                .setOrarioPartenza(scelta.getOrarioPartenza())
+                                .setOrarioArrivo(scelta.getOrarioArrivo())
+                                .setPrezzo(scelta.getPrezzo())
+                                .setData(req.getData())
+                                .build(), uid)
+                .getPrezzoScontato();
+        Biglietto b = new Biglietto(
+                "B-" + Math.abs(uid.hashCode()) + "-" + System.currentTimeMillis(),
+                uid, scelta.getId(), scelta.getStazionePartenza(), scelta.getStazioneArrivo(),
+                prezzo, req.getData());
+        BigliettoRepository.salvaBiglietto(b);
+        // notifica acquisto
+        NotificationRegistry.addNotification(uid,
                 Notifica.newBuilder()
-                        .setUserId(userId)  // 🔥 FONDAMENTALE PER FUNZIONARE
+                        .setId("")
+                        .setUserId(uid)
                         .setMessaggio("🎟️ Acquisto: " + scelta.getStazionePartenza() + "→" + scelta.getStazioneArrivo()
-                                + " il " + request.getData() + " | € " + String.format("%.2f", prezzoFinale))
+                                + " il " + req.getData() + " | € " + String.format("%.2f", prezzo))
                         .setTimestamp(LocalTime.now().toString())
                         .build()
         );
-
-        BigliettoResponse response = BigliettoResponse.newBuilder()
-                .setBigliettoId(biglietto.getId())
+        obs.onNext(BigliettoResponse.newBuilder()
+                .setBigliettoId(b.getId())
                 .setStato("Confermato")
-                .setPrezzo(prezzoFinale)
+                .setPrezzo(prezzo)
                 .setTrattaId(scelta.getId())
-                .setData(request.getData())
-                .build();
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+                .setData(req.getData())
+                .build());
+        obs.onCompleted();
     }
 
     @Override
-    public void cercaTratte(CercaTratteRequest request, StreamObserver<CercaTratteResponse> responseObserver) {
-        String partenza = request.getStazionePartenza().toLowerCase();
-        String arrivo = request.getStazioneArrivo().toLowerCase();
-
-        System.out.println("🔍 [RICERCA] Cerca da: " + partenza + " a " + arrivo);
-
-        CercaTratteResponse.Builder builder = CercaTratteResponse.newBuilder();
-
+    public void cercaTratte(CercaTratteRequest req, StreamObserver<CercaTratteResponse> obs) {
+        String p = req.getStazionePartenza().toLowerCase();
+        String a = req.getStazioneArrivo().toLowerCase();
+        CercaTratteResponse.Builder b = CercaTratteResponse.newBuilder();
         for (Tratta t : TrattaRepository.caricaTratte()) {
-            if (t.getStazionePartenza().toLowerCase().contains(partenza)
-                    && t.getStazioneArrivo().toLowerCase().contains(arrivo)) {
-                builder.addTratte(com.trenical.grpc.Tratta.newBuilder()
+            if (t.getStazionePartenza().toLowerCase().contains(p)
+                    && t.getStazioneArrivo().toLowerCase().contains(a)) {
+                b.addTratte(com.trenical.grpc.Tratta.newBuilder()
                         .setId(t.getId())
                         .setStazionePartenza(t.getStazionePartenza())
                         .setStazioneArrivo(t.getStazioneArrivo())
@@ -136,99 +123,74 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
                         .build());
             }
         }
-
-        System.out.println("🔍 [RICERCA] Trovate " + builder.getTratteCount() + " tratte");
-
-        responseObserver.onNext(builder.build());
-        responseObserver.onCompleted();
+        obs.onNext(b.build());
+        obs.onCompleted();
     }
 
     @Override
-    public void getStoricoBiglietti(UserIdRequest request, StreamObserver<StoricoBigliettiResponse> responseObserver) {
-        String userId = request.getUserId();
-        List<Biglietto> miei = BigliettoRepository.caricaBiglietti().stream()
-                .filter(b -> b.getUserId().equals(userId))
-                .toList();
-
-        System.out.println("📜 [STORICO] Biglietti utente " + userId + ": " + miei.size());
-
-        StoricoBigliettiResponse.Builder response = StoricoBigliettiResponse.newBuilder();
-        for (Biglietto b : miei) {
-            response.addBiglietti(BigliettoInfo.newBuilder()
-                    .setId(b.getId())
-                    .setTrattaId(b.getTrattaId())
-                    .setPartenza(b.getPartenza())
-                    .setArrivo(b.getArrivo())
-                    .setPrezzo(b.getPrezzo())
-                    .setTimestamp(b.getTimestamp())
-                    .build());
-        }
-
-        responseObserver.onNext(response.build());
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    public void streamNotifiche(NotificheRequest request, StreamObserver<Notifica> responseObserver) {
-        String userId = request.getUserId();
-        System.out.println("📤 [STREAM] Connessione notifiche per userId: " + userId);
-        StreamManager.registra(userId, responseObserver);
-
-        // ⏳ Invia solo se il canale è attivo, salva solo ID non vuoti
-        List<Notifica> pending = NotificationRegistry.getUnreadNotifications(userId);
-        int inviate = 0;
-
-        for (Notifica n : pending) {
-            try {
-                if (n.getId().isBlank()) {
-                    System.out.println("⚠️ [FIX] Assegnato nuovo ID a notifica pendente per " + userId);
-                    n = n.toBuilder().setId(UUID.randomUUID().toString()).build();
-                }
-                responseObserver.onNext(n);
-                inviate++;
-            } catch (Exception e) {
-                System.err.println("❌ Errore invio notifica pregressa: " + e.getMessage());
+    public void getStoricoBiglietti(UserIdRequest req, StreamObserver<StoricoBigliettiResponse> obs) {
+        StoricoBigliettiResponse.Builder b = StoricoBigliettiResponse.newBuilder();
+        for (Biglietto bg : BigliettoRepository.caricaBiglietti()) {
+            if (bg.getUserId().equals(req.getUserId())) {
+                b.addBiglietti(BigliettoInfo.newBuilder()
+                        .setId(bg.getId())
+                        .setTrattaId(bg.getTrattaId())
+                        .setPartenza(bg.getPartenza())
+                        .setArrivo(bg.getArrivo())
+                        .setPrezzo(bg.getPrezzo())
+                        .setTimestamp(bg.getTimestamp())
+                        .build());
             }
         }
-
-        if (inviate > 0) {
-            System.out.println("📬 Inviate " + inviate + " notifiche pregresse a " + userId);
-            NotificationRegistry.markAllAsRead(userId); // solo se almeno una è partita
-        }
+        obs.onNext(b.build());
+        obs.onCompleted();
     }
 
-
-
+    @Override
+    public void streamNotifiche(NotificheRequest req, StreamObserver<Notifica> obs) {
+        String uid = req.getUserId();
+        // registro subito lo stream
+        StreamManager.registra(uid, obs);
+        // invio tutte le pendenti
+        List<Notifica> pend = NotificationRegistry.getUnreadNotifications(uid);
+        for (Notifica n : pend) {
+            obs.onNext(n);
+        }
+        // segno lette
+        NotificationRegistry.markAllAsRead(uid);
+        // non chiudo il flusso
+    }
 
     @Override
-    public void getTicketInfo(TicketRequest request, StreamObserver<TicketResponse> responseObserver) {
-        String ticketId = request.getTicketId();
-        System.out.println("🔎 [INFO] Richiesta info per ticket: " + ticketId);
-
-        Biglietto big = BigliettoRepository.caricaBiglietti().stream()
-                .filter(b -> b.getId().equals(ticketId))
-                .findFirst().orElse(null);
-
-        TicketResponse.Builder resp = TicketResponse.newBuilder();
-
-        if (big == null) {
-            System.out.println("❌ [INFO] Ticket non trovato: " + ticketId);
-            resp.setTicketId("N/D")
-                    .setPassengerName("❌ Biglietto non trovato")
-                    .setTrainNumber("N/D")
-                    .setDepartureTime("N/D")
-                    .setArrivalTime("N/D")
-                    .setPrezzo(0.0);
-        } else {
-            resp.setTicketId(big.getId())
-                    .setPassengerName(big.getUserId())
-                    .setTrainNumber("TRN-" + big.getTrattaId())
-                    .setDepartureTime(big.getTimestamp())
-                    .setArrivalTime("N/D")
-                    .setPrezzo(big.getPrezzo());
+    public void updateTratta(UpdateTrattaRequest req, StreamObserver<Empty> obs) {
+        // aggiorno la lista delle tratte
+        List<Tratta> tratte = TrattaRepository.caricaTratte();
+        com.trenical.grpc.Tratta g = req.getTratta();
+        tratte = tratte.stream()
+                .map(t -> t.getId().equals(g.getId())
+                        ? new Tratta(g.getId(), g.getStazionePartenza(), g.getStazioneArrivo(),
+                        g.getOrarioPartenza(), g.getOrarioArrivo(), g.getPrezzo())
+                        : t)
+                .collect(Collectors.toList());
+        TrattaRepository.salvaTratte(tratte);
+        // notifico i clienti che hanno un biglietto su questa tratta
+        List<Biglietto> tickets = BigliettoRepository.caricaBiglietti();
+        for (Utente u : UtenteRepository.caricaTutti()) {
+            boolean has = tickets.stream()
+                    .anyMatch(b -> b.getUserId().equals(u.getUserId())
+                            && b.getTrattaId().equals(g.getId()));
+            if (has) {
+                Notifica n = Notifica.newBuilder()
+                        .setId("N-" + UUID.randomUUID())
+                        .setUserId(u.getUserId())
+                        .setMessaggio("🔄 Tratta aggiornata: "
+                                + g.getStazionePartenza() + " → " + g.getStazioneArrivo())
+                        .setTimestamp(LocalDateTime.now().toString())
+                        .build();
+                NotificationRegistry.addNotification(u.getUserId(), n);
+            }
         }
-
-        responseObserver.onNext(resp.build());
-        responseObserver.onCompleted();
+        obs.onNext(Empty.getDefaultInstance());
+        obs.onCompleted();
     }
 }

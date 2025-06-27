@@ -8,32 +8,37 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class StreamManager {
 
-    private static final Map<String, StreamObserver<Notifica>> activeStreams = new ConcurrentHashMap<>();
+    // userId → observer connesso
+    private static final Map<String, StreamObserver<Notifica>> observers = new ConcurrentHashMap<>();
 
     public static void registra(String userId, StreamObserver<Notifica> observer) {
-        activeStreams.put(userId, observer);
-        System.out.println("🔄 [STREAM] Registrato stream per " + userId);
+        observers.put(userId, observer);
+        System.out.println("✅ [StreamManager] Registrato stream per userId: " + userId);
     }
 
-    public static void rimuovi(String userId) {
-        activeStreams.remove(userId);
-        System.out.println("❌ [STREAM] Rimosso stream per " + userId);
+    public static void disconnetti(String userId) {
+        observers.remove(userId);
+        System.out.println("❌ [StreamManager] Disconnesso stream per userId: " + userId);
     }
-    public static boolean invia(String userId, Notifica notifica) {
-        StreamObserver<Notifica> observer = activeStreams.get(userId);
+
+    public static void invia(String userId, Notifica notifica) {
+        System.out.println("➡️ [StreamManager] Invio tentativo a “" + userId +
+                "”, osservatori registrati: " + observers.keySet());
+        StreamObserver<Notifica> observer = observers.get(userId);
         if (observer != null) {
             try {
                 observer.onNext(notifica);
-                return true;
+                System.out.println("📨 [StreamManager] Inviata notifica live a " + userId + ": " + notifica.getMessaggio());
             } catch (Exception e) {
-                System.err.println("❌ [STREAM] Errore invio a " + userId + ": " + e.getMessage());
-                rimuovi(userId);
+                System.err.println("⚠️ [StreamManager] Errore invio a " + userId + ": " + e.getMessage());
+                disconnetti(userId);
             }
+        } else {
+            System.out.println("🕓 [StreamManager] Nessun client connesso per " + userId + ", notifica in coda.");
         }
-        return false;
     }
 
-    public static StreamObserver<Notifica> get(String userId) {
-        return activeStreams.get(userId);
+    public static boolean isConnesso(String userId) {
+        return observers.containsKey(userId);
     }
 }

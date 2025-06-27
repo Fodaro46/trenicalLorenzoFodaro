@@ -1,21 +1,21 @@
 package com.trenical.server.controller;
 
-import com.trenical.grpc.Notifica;
-import com.trenical.server.model.Tratta;
-import com.trenical.server.model.Utente;
-import com.trenical.server.repository.BigliettoRepository;
-import com.trenical.server.repository.TrattaRepository;
-import com.trenical.server.repository.UtenteRepository;
-import com.trenical.server.util.NotificationRegistry;
-import com.trenical.server.util.StreamManager;
+import com.google.protobuf.Empty;
+import com.trenical.grpc.UpdateTrattaRequest;
+import com.trenical.grpc.TrenicalServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import com.trenical.server.model.Tratta;
+import com.trenical.server.repository.TrattaRepository;
 
 public class AdminController {
 
@@ -36,8 +36,17 @@ public class AdminController {
 
     private final ObservableList<Tratta> tratte = FXCollections.observableArrayList();
 
+    private ManagedChannel channel;
+    private TrenicalServiceGrpc.TrenicalServiceBlockingStub blockingStub;
+
     @FXML
     public void initialize() {
+        // inizializza il canale gRPC e lo stub
+        channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+                .usePlaintext()
+                .build();
+        blockingStub = TrenicalServiceGrpc.newBlockingStub(channel);
+
         codiceColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getId()));
         partenzaColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getStazionePartenza()));
         arrivoColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getStazioneArrivo()));
@@ -46,7 +55,6 @@ public class AdminController {
         prezzoColumn.setCellValueFactory(cd -> new SimpleStringProperty("€ " + cd.getValue().getPrezzo()));
 
         trattaTable.setItems(tratte);
-
         tratte.setAll(TrattaRepository.caricaTratte());
 
         trattaTable.getSelectionModel().selectedItemProperty()
@@ -76,7 +84,6 @@ public class AdminController {
             showAlert("Compila tutti i campi.");
             return;
         }
-
         double prezzo;
         try {
             prezzo = Double.parseDouble(prezzoStr);
@@ -84,11 +91,9 @@ public class AdminController {
             showAlert("Prezzo non valido.");
             return;
         }
-
         Tratta nuova = new Tratta(codice, partenza, arrivo, orarioPartenza, orarioArrivo, prezzo);
         tratte.add(nuova);
         TrattaRepository.aggiungiTratta(nuova);
-
         clearFields();
         showInfo("Tratta aggiunta!");
     }
@@ -100,7 +105,6 @@ public class AdminController {
             showAlert("Seleziona una tratta da modificare.");
             return;
         }
-
         String partenza = partenzaField.getText().trim();
         String arrivo = arrivoField.getText().trim();
         String orarioPartenza = orarioPartenzaField.getText().trim();
@@ -114,36 +118,30 @@ public class AdminController {
             showAlert("Prezzo non valido.");
             return;
         }
-
         sel.setStazionePartenza(partenza);
         sel.setStazioneArrivo(arrivo);
         sel.setOrarioPartenza(orarioPartenza);
         sel.setOrarioArrivo(orarioArrivo);
         sel.setPrezzo(prezzo);
 
-        TrattaRepository.salvaTratte(tratte);
-        trattaTable.refresh();
+        // Chiamata gRPC al server per aggiornare la tratta e inviare notifiche
+        com.trenical.grpc.Tratta grpcTratta = com.trenical.grpc.Tratta.newBuilder()
+                .setId(sel.getId())
+                .setStazionePartenza(partenza)
+                .setStazioneArrivo(arrivo)
+                .setOrarioPartenza(orarioPartenza)
+                .setOrarioArrivo(orarioArrivo)
+                .setPrezzo(prezzo)
+                .build();
+
+        UpdateTrattaRequest req = UpdateTrattaRequest.newBuilder()
+                .setTratta(grpcTratta)
+                .build();
+        blockingStub.updateTratta(req);
+
         clearFields();
         showInfo("Tratta aggiornata!");
-
-        var tuttiIBiglietti = BigliettoRepository.caricaBiglietti();
-
-        for (Utente u : UtenteRepository.caricaTutti()) {
-            boolean haTratta = tuttiIBiglietti.stream()
-                    .anyMatch(b -> b.getUserId().equals(u.getUserId()) && b.getTrattaId().equals(sel.getId()));
-
-            if (haTratta) {
-                Notifica n = Notifica.newBuilder()
-                        .setUserId(u.getUserId())
-                        .setMessaggio("🔄 Tratta aggiornata: " + sel.getStazionePartenza() + " → " + sel.getStazioneArrivo())
-                        .setTimestamp(LocalDateTime.now().toString())
-                        .build();
-
-                NotificationRegistry.addNotification(u.getUserId(), n);
-            }
-        }
     }
-
 
     private void clearFields() {
         codiceField.clear();
@@ -160,5 +158,11 @@ public class AdminController {
 
     private void showInfo(String msg) {
         new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
+    }
+
+    public void shutdown() {
+        if (channel != null && !channel.isShutdown()) {
+            channel.shutdownNow();
+        }
     }
 }

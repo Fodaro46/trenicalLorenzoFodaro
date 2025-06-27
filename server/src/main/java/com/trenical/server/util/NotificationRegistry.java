@@ -1,94 +1,125 @@
 package com.trenical.server.util;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.trenical.grpc.Notifica;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NotificationRegistry {
 
-    private static final Path FILE = Paths.get("server", "data", "notifiche.json");
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Type TYPE = new TypeToken<Map<String, List<Notifica>>>() {}.getType();
-    private static final Map<String, List<Notifica>> notifiche = new HashMap<>();
+    private static final Map<String, List<Notifica>> notifichePerUtente = new ConcurrentHashMap<>();
+    private static final String FILE_PATH = "notifiche.json";
+    private static final Gson gson = new Gson();
 
     static {
-        caricaDaFile();
+        caricaNotifiche();
     }
 
-    public static synchronized boolean addNotification(String userId, Notifica n) {
-        Notifica withId = n.toBuilder().setId(UUID.randomUUID().toString()).build();
-        notifiche.computeIfAbsent(userId, k -> new ArrayList<>()).add(withId);
-        salvaSuFile();
-        System.out.println("📌 [LOG] Nuova notifica per " + userId + ": " + withId.getMessaggio());
-
-        boolean live = StreamManager.invia(userId, withId);
-
-        if (!live) {
-            System.out.println("⚠️ [DEBUG] Nessuno stream attivo per " + userId + " — ritento tra 1 secondo...");
-            // Retry asincrono singolo dopo 1 secondo
-            new Thread(() -> {
-                try {
-                    Thread.sleep(1000);
-                    boolean retryLive = StreamManager.invia(userId, withId);
-                    System.out.println("📌 [RETRY] Notifica " + (retryLive ? "inviata live" : "ancora accumulata")
-                            + " a " + userId + ": " + withId.getMessaggio());
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+    private static void caricaNotifiche() {
+        File file = new File(FILE_PATH);
+        try {
+            if (!file.exists()) {
+                boolean created = file.createNewFile();
+                if (created) {
+                    System.out.println("📄 [NotificationRegistry] Creato nuovo file notifiche.json.");
+                } else {
+                    System.err.println("⚠️ [NotificationRegistry] Creazione di notifiche.json fallita (file esistente o permessi mancanti).");
                 }
-            }).start();
-        } else {
-            System.out.println("📌 [LOG] Notifica inviata live a " + userId + ": " + withId.getMessaggio());
-        }
+                return;
+            }
 
-        return live;
+            String json = Files.readString(file.toPath());
+            if (!json.isBlank()) {
+                Type type = new TypeToken<Map<String, List<Notifica>>>() {}.getType();
+                Map<String, List<Notifica>> caricate = gson.fromJson(json, type);
+                if (caricate != null) {
+                    notifichePerUtente.putAll(caricate);
+                }
+            }
+            System.out.println("📂 [NotificationRegistry] Notifiche caricate da disco.");
+        } catch (IOException e) {
+            System.err.println("❌ [NotificationRegistry] Errore durante creazione/lettura di notifiche.json: " + e.getMessage());
+        }
+    }
+
+    public static synchronized void addNotification(String userId, Notifica notificaOriginale) {
+        // Genera ID univoco se mancante
+        String idGenerato = notificaOriginale.getId().isBlank()
+                ? "N-" + UUID.randomUUID()
+                : notificaOriginale.getId();
+
+        Notifica notifica = Notifica.newBuilder(notificaOriginale)
+                .setId(idGenerato)
+                .build();
+
+        notifichePerUtente
+                .computeIfAbsent(userId, k -> new ArrayList<>())
+                .add(notifica);
+
+        salvaNotifiche();
+
+        System.out.println("📥 [NotificationRegistry] Nuova notifica per " + userId + ": " + notifica.getMessaggio());
+
+        // Se il client è connesso, invia subito
+        if (StreamManager.isConnesso(userId)) {
+            StreamManager.invia(userId, notifica);
+            markAsRead(userId, notifica.getId());
+        }
     }
 
     public static synchronized List<Notifica> getUnreadNotifications(String userId) {
-        List<Notifica> raw = notifiche.getOrDefault(userId, List.of());
-        List<Notifica> withIds = new ArrayList<>();
-        for (Notifica n : raw) {
-            if (n.getId().isBlank()) {
-                System.out.println("⚠️ [FIX] Assegnato nuovo ID a notifica pendente per " + userId);
-                n = n.toBuilder().setId(UUID.randomUUID().toString()).build();
+        return notifichePerUtente.getOrDefault(userId, Collections.emptyList()).stream()
+                .filter(n -> !n.getId().endsWith("_LETTA"))
+                .toList();
+    }
+
+    public static synchronized void markAsRead(String userId, String idNotifica) {
+        List<Notifica> lista = notifichePerUtente.get(userId);
+        if (lista == null) return;
+
+        for (int i = 0; i < lista.size(); i++) {
+            Notifica n = lista.get(i);
+            if (n.getId().equals(idNotifica)) {
+                Notifica letta = Notifica.newBuilder(n)
+                        .setId(n.getId() + "_LETTA")
+                        .build();
+                lista.set(i, letta);
+                System.out.println("✅ [NotificationRegistry] Notifica segnata come letta: " + idNotifica);
+                break;
             }
-            withIds.add(n);
         }
-        return withIds;
+        salvaNotifiche();
     }
 
     public static synchronized void markAllAsRead(String userId) {
-        notifiche.remove(userId);
-        salvaSuFile();
-        System.out.println("✅ [LOG] Tutte le notifiche lette per: " + userId);
-    }
+        List<Notifica> lista = notifichePerUtente.get(userId);
+        if (lista == null) return;
 
-    private static void caricaDaFile() {
-        try {
-            if (Files.notExists(FILE)) {
-                Files.createDirectories(FILE.getParent());
-                Files.writeString(FILE, "{}");
+        for (int i = 0; i < lista.size(); i++) {
+            Notifica n = lista.get(i);
+            if (!n.getId().endsWith("_LETTA")) {
+                lista.set(i, Notifica.newBuilder(n)
+                        .setId(n.getId() + "_LETTA")
+                        .build());
             }
-            String json = Files.readString(FILE);
-            Map<String, List<Notifica>> data = GSON.fromJson(json, TYPE);
-            if (data != null) notifiche.putAll(data);
-        } catch (IOException e) {
-            System.err.println("❌ Lettura notifiche fallita: " + e.getMessage());
         }
+        salvaNotifiche();
+        System.out.println("✅ [NotificationRegistry] Tutte le notifiche di " + userId + " segnate come lette");
     }
 
-    private static void salvaSuFile() {
-        try {
-            String json = GSON.toJson(notifiche, TYPE);
-            Path temp = Files.createTempFile(FILE.getParent(), "notifiche", ".json");
-            Files.writeString(temp, json);
-            Files.move(temp, FILE, StandardCopyOption.REPLACE_EXISTING);
+    private static void salvaNotifiche() {
+        try (FileWriter writer = new FileWriter(FILE_PATH)) {
+            gson.toJson(notifichePerUtente, writer);
         } catch (IOException e) {
-            System.err.println("❌ Salvataggio notifiche fallito: " + e.getMessage());
+            System.err.println("❌ [NotificationRegistry] Errore salvataggio notifiche.json: " + e.getMessage());
         }
     }
 }

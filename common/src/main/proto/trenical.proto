@@ -19,6 +19,9 @@ service TrenicalService {
   rpc StreamNotifiche      (NotificheRequest)          returns (stream Notifica);
   rpc GetStoricoBiglietti  (UserIdRequest)             returns (StoricoBigliettiResponse);
   rpc CercaTratte          (CercaTratteRequest)        returns (CercaTratteResponse);
+
+  // === AGGIUNTO per aggiornamento tratte ===
+  rpc UpdateTratta         (UpdateTrattaRequest)       returns (google.protobuf.Empty);
 }
 
 service PromotionService {
@@ -49,6 +52,11 @@ message CercaTratteRequest {
 
 message CercaTratteResponse {
   repeated Tratta tratte = 1;
+}
+
+// --- Update tratta ---
+message UpdateTrattaRequest {
+  Tratta tratta = 1;
 }
 
 // --- Offerta ---
@@ -113,7 +121,6 @@ message Notifica {
   string messaggio = 3;
   string timestamp = 4;
 }
-
 
 // --- Storico Biglietti ---
 message UserIdRequest {
