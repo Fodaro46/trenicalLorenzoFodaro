@@ -10,6 +10,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.util.Comparator;
+
 public class TicketHistoryController {
 
     @FXML private TextField userIdField;
@@ -28,31 +30,47 @@ public class TicketHistoryController {
             return;
         }
 
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051)
-                .usePlaintext()
-                .build();
+        ManagedChannel channel = null;
+        try {
+            channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+                    .usePlaintext()
+                    .build();
+            var stub = TrenicalServiceGrpc.newBlockingStub(channel);
 
-        TrenicalServiceGrpc.TrenicalServiceBlockingStub stub = TrenicalServiceGrpc.newBlockingStub(channel);
+            StoricoBigliettiResponse response = stub.getStoricoBiglietti(
+                    UserIdRequest.newBuilder().setUserId(userId).build()
+            );
 
-        UserIdRequest request = UserIdRequest.newBuilder().setUserId(userId).build();
-        StoricoBigliettiResponse response = stub.getStoricoBiglietti(request);
+            ObservableList<Ticket> tickets = FXCollections.observableArrayList();
+            for (BigliettoInfo info : response.getBigliettiList()) {
+                tickets.add(new Ticket(
+                        info.getId(),
+                        info.getTrattaId(),
+                        info.getTimestamp(),
+                        "Confermato",
+                        info.getPrezzo()
+                ));
+            }
 
-        ObservableList<Ticket> tickets = FXCollections.observableArrayList();
+            if (tickets.isEmpty()) {
+                showAlert("Nessun biglietto trovato per l'utente: " + userId);
+                tableView.getItems().clear();
+                return;
+            }
 
-        for (BigliettoInfo info : response.getBigliettiList()) {
-            tickets.add(new Ticket(
-                    info.getId(),
-                    info.getTrattaId(),
-                    info.getTimestamp(),
-                    "Confermato",
-                    info.getPrezzo()
-            ));
+            // Ordina per data decrescente (ISO yyyy-MM-dd)
+            tickets.sort(Comparator.comparing(Ticket::getData).reversed());
+
+            setupColumns();
+            tableView.setItems(tickets);
+
+        } catch (Exception e) {
+            showAlert("Errore caricamento storico: " + e.getMessage());
+        } finally {
+            if (channel != null && !channel.isShutdown()) {
+                channel.shutdownNow();
+            }
         }
-
-        setupColumns(); // inizializzazione colonne
-        tableView.setItems(tickets);
-
-        channel.shutdown();
     }
 
     private void setupColumns() {
@@ -60,7 +78,11 @@ public class TicketHistoryController {
         colTratta.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getTratta()));
         colData.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getData()));
         colStato.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getStato()));
-        colPrezzo.setCellValueFactory(t -> new SimpleStringProperty("€ " + String.format("%.2f", t.getValue().getPrezzo())));
+        colPrezzo.setCellValueFactory(t ->
+                new SimpleStringProperty("€ " + String.format("%.2f", t.getValue().getPrezzo()))
+        );
+        // Mostra in testa la colonna Data
+        tableView.getSortOrder().setAll(colData);
     }
 
     private void showAlert(String msg) {

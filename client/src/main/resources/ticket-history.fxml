@@ -8,16 +8,16 @@
       spacing="10" alignment="CENTER"
       style="-fx-padding: 20;">
 
-    <TextField fx:id="userIdField" promptText="Inserisci User ID"/>
+    <TextField fx:id="userIdField" promptText="Inserisci User ID" />
     <Button text="Carica Storico" onAction="#onLoadTickets"/>
 
-    <TableView fx:id="tableView" prefHeight="250">
+    <TableView fx:id="tableView" prefHeight="250" prefWidth="600">
         <columns>
-            <TableColumn fx:id="colId" text="ID Biglietto"/>
-            <TableColumn fx:id="colTratta" text="Tratta"/>
-            <TableColumn fx:id="colData" text="Data"/>
-            <TableColumn fx:id="colStato" text="Stato"/>
-            <TableColumn fx:id="colPrezzo" text="Prezzo"/>
+            <TableColumn fx:id="colId" text="ID Biglietto" prefWidth="150"/>
+            <TableColumn fx:id="colTratta" text="Tratta" prefWidth="150"/>
+            <TableColumn fx:id="colData" text="Data" prefWidth="100"/>
+            <TableColumn fx:id="colStato" text="Stato" prefWidth="100"/>
+            <TableColumn fx:id="colPrezzo" text="Prezzo" prefWidth="100"/>
         </columns>
     </TableView>
 </VBox>

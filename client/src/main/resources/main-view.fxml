@@ -6,6 +6,14 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.trenical.client.controller.MainController">
 
+    <top>
+        <Label fx:id="promoLabel"
+               text=""
+               visible="false"
+               alignment="CENTER"
+               style="-fx-text-fill: #2a9d8f; -fx-font-weight: bold; -fx-padding: 10px;"/>
+    </top>
+
     <left>
         <VBox spacing="12" alignment="TOP_CENTER"
               style="-fx-padding: 15; -fx-background-color: #f0f0f0;">

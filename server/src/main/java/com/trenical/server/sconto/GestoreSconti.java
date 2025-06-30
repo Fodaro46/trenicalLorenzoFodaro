@@ -10,6 +10,7 @@ public class GestoreSconti {
         strategie.add(new ScontoStudente());
         strategie.add(new ScontoWeekend());
         strategie.add(new ScontoLastMinute());
+        strategie.add(new ScontoFedelta());
     }
 
     public OffertaResponse calcolaMiglioreOfferta(Tratta tratta, String userId) {

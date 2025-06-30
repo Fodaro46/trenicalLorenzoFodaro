@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 
 public class OffertaController {
 
+    @FXML private Label tipoLabel;
     @FXML private Label prezzoLabel;
     @FXML private Label descrizioneLabel;
 
@@ -25,33 +26,44 @@ public class OffertaController {
 
     private void calcolaOfferta() {
         if (tratta == null) {
-            showAlert("Errore", "Nessuna tratta fornita");
+            showAlert("Errore", "Nessuna tratta selezionata");
             return;
         }
 
-        String userId = SessionManager.getInstance().getCurrentUser().getUserId();
+        var user = SessionManager.getInstance().getCurrentUser();
+        if (user == null) {
+            showAlert("Sessione mancante", "Effettua il login per visualizzare offerte");
+            return;
+        }
 
-        ManagedChannel channel = ManagedChannelBuilder
-                .forAddress("localhost", 50051)
-                .usePlaintext()
-                .build();
+        ManagedChannel channel = null;
 
         try {
+            channel = ManagedChannelBuilder
+                    .forAddress("localhost", 50051)
+                    .usePlaintext()
+                    .build();
+
             var stub = PromotionServiceGrpc.newBlockingStub(channel);
-            OffertaResponse resp = stub.getOfferta(
+            OffertaResponse response = stub.getOfferta(
                     GetOffertaRequest.newBuilder()
-                            .setUserId(userId)
+                            .setUserId(user.getUserId())
                             .setTratta(tratta)
                             .build()
             );
-            prezzoLabel.setText("€ " + resp.getPrezzoScontato());
-            descrizioneLabel.setText(resp.getDescrizione());
+
+            tipoLabel.setText(response.getTipo());
+            prezzoLabel.setText("€ " + String.format("%.2f", response.getPrezzoScontato()));
+            descrizioneLabel.setText(response.getDescrizione());
+
         } catch (Exception e) {
+            tipoLabel.setText("-");
             prezzoLabel.setText("-");
-            descrizioneLabel.setText("Errore durante il calcolo");
-            showAlert("Errore promozione", e.getMessage());
+            descrizioneLabel.setText("Errore durante il calcolo: " + e.getMessage());
         } finally {
-            channel.shutdownNow(); // chiusura sicura
+            if (channel != null && !channel.isShutdown()) {
+                channel.shutdownNow();
+            }
         }
     }
 

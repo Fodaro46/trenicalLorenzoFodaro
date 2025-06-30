@@ -511,5 +511,14 @@
     "arrivo": "crotone",
     "prezzo": 15.75,
     "timestamp": "2025-06-28"
+  },
+  {
+    "id": "B-1524969069-1751312582230",
+    "userId": "user-608746093",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 15.75,
+    "timestamp": "2025-07-04"
   }
 ]

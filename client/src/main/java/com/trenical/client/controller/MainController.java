@@ -2,9 +2,15 @@ package com.trenical.client.controller;
 
 import com.trenical.client.model.Tratta;
 import com.trenical.client.session.SessionManager;
+import com.trenical.grpc.GetOffertaRequest;
+import com.trenical.grpc.OffertaResponse;
+import com.trenical.grpc.PromotionServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
@@ -13,14 +19,14 @@ import java.io.IOException;
 public class MainController {
 
     @FXML private StackPane contentPane;
+    @FXML private Label promoLabel; // Opzionale nel tuo FXML, può essere anche invisibile inizialmente
+
     private TrattaController trattaController;
 
     private boolean checkLogin() {
         if (!SessionManager.getInstance().isLoggedIn()) {
-            Alert a = new Alert(Alert.AlertType.WARNING,
-                    "Effettua il login prima di usare questa funzionalità.");
-            a.setHeaderText("Accesso Richiesto");
-            a.showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Effettua il login prima di usare questa funzionalità.")
+                    .showAndWait();
             return false;
         }
         return true;
@@ -32,8 +38,7 @@ public class MainController {
 
     public void showTratte() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/Trattaview.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Trattaview.fxml"));
             Pane pane = loader.load();
             trattaController = loader.getController();
             contentPane.getChildren().setAll(pane);
@@ -44,23 +49,14 @@ public class MainController {
 
     public void showAcquisto() {
         if (!checkLogin()) return;
-        if (trattaController == null) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Visita prima 'Ricerca Tratte'").showAndWait();
-            return;
-        }
+        if (!checkTrattaSelection()) return;
+
         Tratta sel = trattaController.getSelectedTratta();
-        if (sel == null) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Seleziona una tratta.").showAndWait();
-            return;
-        }
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/acquisto-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/acquisto-view.fxml"));
             Pane pane = loader.load();
-            AcquistoController ac = loader.getController();
-            ac.setTratta(sel);
+            AcquistoController controller = loader.getController();
+            controller.setTratta(sel);
             contentPane.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,35 +65,23 @@ public class MainController {
 
     public void showOfferta() {
         if (!checkLogin()) return;
-        if (trattaController == null) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Visita prima 'Ricerca Tratte'").showAndWait();
-            return;
-        }
+        if (!checkTrattaSelection()) return;
+
         Tratta sel = trattaController.getSelectedTratta();
-        if (sel == null) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Seleziona una tratta.").showAndWait();
-            return;
-        }
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/offerta.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/offerta.fxml"));
             Pane pane = loader.load();
-            OffertaController oc = loader.getController();
-            com.trenical.grpc.Tratta grpcT = com.trenical.grpc.Tratta.newBuilder()
-                    .setId(sel.getId())
-                    .setStazionePartenza(sel.getStazionePartenza())
-                    .setStazioneArrivo(sel.getStazioneArrivo())
-                    .setOrarioPartenza(sel.getOrarioPartenza())
-                    .setOrarioArrivo(sel.getOrarioArrivo())
-                    .setPrezzo(sel.getPrezzo())
-                    .build();
-            oc.setContesto(grpcT);
+            OffertaController controller = loader.getController();
+            if (controller != null) {
+                controller.setContesto(buildGrpcTratta(sel));
+            }
             contentPane.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // opzionale: mostra badge promozione accanto
+        aggiornaBadgePromozione(sel);
     }
 
     public void showTicket() {
@@ -117,11 +101,64 @@ public class MainController {
 
     private void loadView(String fxml) {
         try {
-            Pane p = FXMLLoader.load(
-                    getClass().getResource("/" + fxml));
+            Pane p = FXMLLoader.load(getClass().getResource("/" + fxml));
             contentPane.getChildren().setAll(p);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private boolean checkTrattaSelection() {
+        if (trattaController == null) {
+            new Alert(Alert.AlertType.WARNING, "Visita prima 'Ricerca Tratte'").showAndWait();
+            return false;
+        }
+        Tratta sel = trattaController.getSelectedTratta();
+        if (sel == null) {
+            new Alert(Alert.AlertType.WARNING, "Seleziona una tratta.").showAndWait();
+            return false;
+        }
+        return true;
+    }
+
+    private com.trenical.grpc.Tratta buildGrpcTratta(Tratta sel) {
+        return com.trenical.grpc.Tratta.newBuilder()
+                .setId(sel.getId())
+                .setStazionePartenza(sel.getStazionePartenza())
+                .setStazioneArrivo(sel.getStazioneArrivo())
+                .setOrarioPartenza(sel.getOrarioPartenza())
+                .setOrarioArrivo(sel.getOrarioArrivo())
+                .setPrezzo(sel.getPrezzo())
+                .setData("")
+                .build();
+    }
+
+    private void aggiornaBadgePromozione(Tratta sel) {
+        if (promoLabel == null) return;
+
+        promoLabel.setVisible(false);
+        ManagedChannel channel = null;
+        try {
+            channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+                    .usePlaintext()
+                    .build();
+            var stub = PromotionServiceGrpc.newBlockingStub(channel);
+            OffertaResponse resp = stub.getOfferta(
+                    GetOffertaRequest.newBuilder()
+                            .setUserId(SessionManager.getInstance().getCurrentUser().getUserId())
+                            .setTratta(buildGrpcTratta(sel))
+                            .build()
+            );
+            if (!resp.getTipo().equals("Nessuna offerta")) {
+                promoLabel.setText("🎁 Promo attiva: " + resp.getTipo());
+                promoLabel.setVisible(true);
+            }
+        } catch (Exception e) {
+            System.err.println("⚠️ Errore nel badge promozione: " + e.getMessage());
+        } finally {
+            if (channel != null && !channel.isShutdown()) {
+                channel.shutdownNow();
+            }
         }
     }
 }
