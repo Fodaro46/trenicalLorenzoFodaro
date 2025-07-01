@@ -1,5 +1,6 @@
 [
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1749930918747",
     "userId": "user-276798375",
     "trattaId": "12",
@@ -9,6 +10,7 @@
     "timestamp": "2025-06-13"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1749931045956",
     "userId": "user-276798375",
     "trattaId": "12",
@@ -18,6 +20,7 @@
     "timestamp": "2025-06-15"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1749934288843",
     "userId": "user-276798375",
     "trattaId": "12",
@@ -27,6 +30,7 @@
     "timestamp": "2025-06-15"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749945004473",
     "userId": "user-1140648639",
     "trattaId": "12",
@@ -36,6 +40,7 @@
     "timestamp": "2025-06-15"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749945041510",
     "userId": "user-1140648639",
     "trattaId": "12",
@@ -45,6 +50,7 @@
     "timestamp": "2025-06-16"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749945793285",
     "userId": "user-1140648639",
     "trattaId": "12",
@@ -54,6 +60,7 @@
     "timestamp": "2025-06-18"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749946291921",
     "userId": "user-1140648639",
     "trattaId": "12",
@@ -63,6 +70,7 @@
     "timestamp": "2025-06-21"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749946777783",
     "userId": "user-1140648639",
     "trattaId": "11",
@@ -72,6 +80,7 @@
     "timestamp": "2025-06-19"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749947112357",
     "userId": "user-1140648639",
     "trattaId": "11",
@@ -81,6 +90,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749947931002",
     "userId": "user-1140648639",
     "trattaId": "11",
@@ -90,6 +100,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749948349318",
     "userId": "user-1140648639",
     "trattaId": "10",
@@ -99,6 +110,7 @@
     "timestamp": "2025-06-19"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749949093673",
     "userId": "user-1140648639",
     "trattaId": "9",
@@ -108,6 +120,7 @@
     "timestamp": "2025-06-17"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1749949921025",
     "userId": "user-276798375",
     "trattaId": "9",
@@ -117,6 +130,7 @@
     "timestamp": "2025-06-20"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1749950333337",
     "userId": "user-276798375",
     "trattaId": "10",
@@ -126,6 +140,7 @@
     "timestamp": "2025-06-19"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1749950651077",
     "userId": "user-276798375",
     "trattaId": "9",
@@ -135,6 +150,7 @@
     "timestamp": "2025-06-27"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1749950913703",
     "userId": "user-276798375",
     "trattaId": "12",
@@ -144,6 +160,7 @@
     "timestamp": "2025-06-21"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1749951145331",
     "userId": "user-276798375",
     "trattaId": "11",
@@ -153,6 +170,7 @@
     "timestamp": "2025-06-26"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1749991004453",
     "userId": "user-276798375",
     "trattaId": "9",
@@ -162,6 +180,7 @@
     "timestamp": "2025-06-21"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749991176721",
     "userId": "user-1140648639",
     "trattaId": "9",
@@ -171,6 +190,7 @@
     "timestamp": "2025-06-27"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749992296428",
     "userId": "user-1140648639",
     "trattaId": "12",
@@ -180,6 +200,7 @@
     "timestamp": "2025-06-27"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749992742190",
     "userId": "user-1140648639",
     "trattaId": "9",
@@ -189,6 +210,7 @@
     "timestamp": "2025-06-22"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1605149930-1749994432720",
     "userId": "user-1750479081",
     "trattaId": "9",
@@ -198,6 +220,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1286156366-1749994784251",
     "userId": "user-178736316",
     "trattaId": "11",
@@ -207,6 +230,7 @@
     "timestamp": "2025-06-21"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749995441841",
     "userId": "user-1140648639",
     "trattaId": "9",
@@ -216,6 +240,7 @@
     "timestamp": "2025-06-20"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749995868407",
     "userId": "user-1140648639",
     "trattaId": "12",
@@ -225,6 +250,7 @@
     "timestamp": "2025-06-26"
   },
   {
+    "schemaVersion": 1,
     "id": "B-839661325-1749996491963",
     "userId": "user-469237433",
     "trattaId": "10",
@@ -234,6 +260,7 @@
     "timestamp": "2025-06-15"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1235727118-1749996852923",
     "userId": "user-1409347505",
     "trattaId": "10",
@@ -243,6 +270,7 @@
     "timestamp": "2025-06-21"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1235727118-1749996888556",
     "userId": "user-1409347505",
     "trattaId": "10",
@@ -252,6 +280,7 @@
     "timestamp": "2025-06-20"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1534180567-1749998529150",
     "userId": "user-1713761793",
     "trattaId": "11",
@@ -261,6 +290,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749999517709",
     "userId": "user-1140648639",
     "trattaId": "12",
@@ -270,6 +300,7 @@
     "timestamp": "2025-06-21"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1749999608089",
     "userId": "user-1140648639",
     "trattaId": "9",
@@ -279,6 +310,7 @@
     "timestamp": "2025-06-21"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1750001346569",
     "userId": "user-1140648639",
     "trattaId": "9",
@@ -288,6 +320,7 @@
     "timestamp": "2025-06-20"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1750001451482",
     "userId": "user-1140648639",
     "trattaId": "9",
@@ -297,6 +330,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-783006775-1750007482949",
     "userId": "user-383565793",
     "trattaId": "12",
@@ -306,6 +340,7 @@
     "timestamp": "2025-06-16"
   },
   {
+    "schemaVersion": 1,
     "id": "B-125591969-1750008629242",
     "userId": "user-1086477413",
     "trattaId": "9",
@@ -315,6 +350,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-8032183-1750009781000",
     "userId": "user-1817063445",
     "trattaId": "9",
@@ -324,6 +360,7 @@
     "timestamp": "2025-06-22"
   },
   {
+    "schemaVersion": 1,
     "id": "B-8032183-1750009938913",
     "userId": "user-1817063445",
     "trattaId": "12",
@@ -333,6 +370,7 @@
     "timestamp": "2025-06-29"
   },
   {
+    "schemaVersion": 1,
     "id": "B-919945881-1750010375583",
     "userId": "user-10487193",
     "trattaId": "8",
@@ -342,6 +380,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-318993511-1750010944068",
     "userId": "user-172999699",
     "trattaId": "7",
@@ -351,6 +390,7 @@
     "timestamp": "2025-06-20"
   },
   {
+    "schemaVersion": 1,
     "id": "B-198699526-1750011132900",
     "userId": "user-2044574073",
     "trattaId": "9",
@@ -360,6 +400,7 @@
     "timestamp": "2025-06-27"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1198124570-1750011368584",
     "userId": "user-1200751303",
     "trattaId": "9",
@@ -369,6 +410,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1892058626-1750013012813",
     "userId": "user-531919361",
     "trattaId": "9",
@@ -378,6 +420,7 @@
     "timestamp": "2025-06-20"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1750013569599",
     "userId": "user-276798375",
     "trattaId": "12",
@@ -387,6 +430,7 @@
     "timestamp": "2025-06-21"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1750014411126",
     "userId": "user-276798375",
     "trattaId": "9",
@@ -396,6 +440,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1750015105759",
     "userId": "user-276798375",
     "trattaId": "9",
@@ -405,6 +450,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-2004262730-1750015142729",
     "userId": "user-276798375",
     "trattaId": "12",
@@ -414,6 +460,7 @@
     "timestamp": "2025-06-21"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1038704512-1751030498678",
     "userId": "user-1140648639",
     "trattaId": "9",
@@ -423,6 +470,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-225347139-1751031590094",
     "userId": "user-27258023",
     "trattaId": "9",
@@ -432,6 +480,7 @@
     "timestamp": "2025-06-29"
   },
   {
+    "schemaVersion": 1,
     "id": "B-457494021-1751031927923",
     "userId": "user-1223084173",
     "trattaId": "9",
@@ -441,6 +490,7 @@
     "timestamp": "2025-06-30"
   },
   {
+    "schemaVersion": 1,
     "id": "B-360319398-1751034971319",
     "userId": "user-1692494313",
     "trattaId": "7",
@@ -450,6 +500,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1294701206-1751035210380",
     "userId": "user-1533809045",
     "trattaId": "9",
@@ -459,6 +510,7 @@
     "timestamp": "2025-07-04"
   },
   {
+    "schemaVersion": 1,
     "id": "B-375309831-1751036279839",
     "userId": "user-1120117011",
     "trattaId": "11",
@@ -468,6 +520,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-778777727-1751036944755",
     "userId": "user-1176114596",
     "trattaId": "12",
@@ -477,6 +530,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-226426033-1751037099242",
     "userId": "user-274766429",
     "trattaId": "9",
@@ -486,6 +540,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1102732353-1751037492017",
     "userId": "user-1352792196",
     "trattaId": "9",
@@ -495,6 +550,7 @@
     "timestamp": "2025-07-04"
   },
   {
+    "schemaVersion": 1,
     "id": "B-52482792-1751038071156",
     "userId": "user-1927407477",
     "trattaId": "12",
@@ -504,6 +560,7 @@
     "timestamp": "2025-07-03"
   },
   {
+    "schemaVersion": 1,
     "id": "B-815011184-1751039999876",
     "userId": "user-1072677060",
     "trattaId": "12",
@@ -513,6 +570,7 @@
     "timestamp": "2025-06-28"
   },
   {
+    "schemaVersion": 1,
     "id": "B-1524969069-1751312582230",
     "userId": "user-608746093",
     "trattaId": "12",
@@ -520,5 +578,85 @@
     "arrivo": "crotone",
     "prezzo": 15.75,
     "timestamp": "2025-07-04"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-913826614-1751327706016",
+    "userId": "user-1294947224",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 21.0,
+    "timestamp": "2025-07-24"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-913826614-1751327713003",
+    "userId": "user-1294947224",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 21.0,
+    "timestamp": "2025-07-18"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-312288378-1751327767132",
+    "userId": "user-1565793332",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 21.0,
+    "timestamp": "2025-08-02"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-1191169238-1751328412641",
+    "userId": "user-1535966924",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 23.0,
+    "timestamp": "2025-07-11"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-410565586-1751328827382",
+    "userId": "user-834757550",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 23.0,
+    "timestamp": "2025-07-12"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-410565586-1751328869262",
+    "userId": "user-834757550",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 23.0,
+    "timestamp": "2025-07-03"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-1390702063-1751329205754",
+    "userId": "user-752025299",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 23.0,
+    "timestamp": "2025-07-10"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-532771384-1751329263221",
+    "userId": "user-665089732",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 23.0,
+    "timestamp": "2025-07-18"
   }
 ]

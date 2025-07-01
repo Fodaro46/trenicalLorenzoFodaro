@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      xmlns="http://javafx.com/javafx"
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.trenical.client.controller.TicketHistoryController"
       spacing="10" alignment="CENTER"
       style="-fx-padding: 20;">
 
-    <TextField fx:id="userIdField" promptText="Inserisci User ID" />
-    <Button text="Carica Storico" onAction="#onLoadTickets"/>
+    <Label text="Storico Biglietti" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
 
-    <TableView fx:id="tableView" prefHeight="250" prefWidth="600">
+    <TableView fx:id="tableView" prefHeight="250" prefWidth="700">
         <columns>
-            <TableColumn fx:id="colId" text="ID Biglietto" prefWidth="150"/>
-            <TableColumn fx:id="colTratta" text="Tratta" prefWidth="150"/>
-            <TableColumn fx:id="colData" text="Data" prefWidth="100"/>
+            <TableColumn fx:id="colPartenza" text="Partenza" prefWidth="150"/>
+            <TableColumn fx:id="colArrivo" text="Arrivo" prefWidth="150"/>
+            <TableColumn fx:id="colData" text="Data" prefWidth="120"/>
             <TableColumn fx:id="colStato" text="Stato" prefWidth="100"/>
-            <TableColumn fx:id="colPrezzo" text="Prezzo" prefWidth="100"/>
+            <TableColumn fx:id="colPrezzo" text="Prezzo" prefWidth="120"/>
         </columns>
     </TableView>
 </VBox>

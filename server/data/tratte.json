@@ -1,13 +1,15 @@
 [
   {
+    "schemaVersion": 1,
     "id": "12",
     "stazionePartenza": "catanzaro",
     "stazioneArrivo": "crotone",
     "orarioPartenza": "18:10",
-    "orarioArrivo": "20:15",
-    "prezzo": 21.0
+    "orarioArrivo": "21:00",
+    "prezzo": 23.0
   },
   {
+    "schemaVersion": 1,
     "id": "11",
     "stazionePartenza": "Milano",
     "stazioneArrivo": "Reggio Calabria",
@@ -16,6 +18,7 @@
     "prezzo": 158.0
   },
   {
+    "schemaVersion": 1,
     "id": "10",
     "stazionePartenza": "catanzaro",
     "stazioneArrivo": "lamezia",
@@ -24,6 +27,7 @@
     "prezzo": 5.99
   },
   {
+    "schemaVersion": 1,
     "id": "9",
     "stazionePartenza": "milano",
     "stazioneArrivo": "bologna",
@@ -32,6 +36,7 @@
     "prezzo": 45.0
   },
   {
+    "schemaVersion": 1,
     "id": "8",
     "stazionePartenza": "Catanzaro",
     "stazioneArrivo": "Cosenza Castiglione",
@@ -40,6 +45,7 @@
     "prezzo": 15.0
   },
   {
+    "schemaVersion": 1,
     "id": "7",
     "stazionePartenza": "cosenza",
     "stazioneArrivo": "salerno",
@@ -48,6 +54,7 @@
     "prezzo": 27.98
   },
   {
+    "schemaVersion": 1,
     "id": "8",
     "stazionePartenza": "Catanzaro",
     "stazioneArrivo": "Cosenza Castiglione",
@@ -56,6 +63,7 @@
     "prezzo": 15.0
   },
   {
+    "schemaVersion": 1,
     "id": "5",
     "stazionePartenza": "parapippo",
     "stazioneArrivo": "parapippool",

@@ -2,146 +2,211 @@
   {
     "schemaVersion": 1,
     "userId": "user-1140648639",
-    "email": "l@l.it"
+    "email": "l@l.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-276798375",
-    "email": "gas@gas.it"
+    "email": "gas@gas.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-411292677",
-    "email": "mario.rossi@email.it"
+    "email": "mario.rossi@email.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1750479081",
-    "email": "nuovo@nuovo.it"
+    "email": "nuovo@nuovo.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-178736316",
-    "email": "prova15e40@prova.it"
+    "email": "prova15e40@prova.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-469237433",
-    "email": "naruto@naruto.it"
+    "email": "naruto@naruto.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1409347505",
-    "email": "acuna@matata.it"
+    "email": "acuna@matata.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1713761793",
-    "email": "l@lolo.it"
+    "email": "l@lolo.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-383565793",
-    "email": "19e10@19e10.it"
+    "email": "19e10@19e10.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1086477413",
-    "email": "19e30@19e30.it"
+    "email": "19e30@19e30.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1817063445",
-    "email": "19e49@19e49.it"
+    "email": "19e49@19e49.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-10487193",
-    "email": "prova8@prova8.it"
+    "email": "prova8@prova8.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-172999699",
-    "email": "prova20@prova20.it"
+    "email": "prova20@prova20.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-2044574073",
-    "email": "prova100@prova100.it"
+    "email": "prova100@prova100.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1200751303",
-    "email": "speriamosiafinita@speriamo.it"
+    "email": "speriamosiafinita@speriamo.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-531919361",
-    "email": "dai@dai.it"
+    "email": "dai@dai.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-27258023",
-    "email": "io@io.it"
+    "email": "io@io.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1223084173",
-    "email": "pollo@pollo.com"
+    "email": "pollo@pollo.com",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1692494313",
-    "email": "prova@prova.it"
+    "email": "prova@prova.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1533809045",
-    "email": "prova27giugno@p.com"
+    "email": "prova27giugno@p.com",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1120117011",
-    "email": "17@17.com"
+    "email": "17@17.com",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-664963071",
-    "email": "adesso@nuovo.com"
+    "email": "adesso@nuovo.com",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1176114596",
-    "email": "battibecco@it.com"
+    "email": "battibecco@it.com",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-274766429",
-    "email": "miloggo@loggo.it"
+    "email": "miloggo@loggo.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1352792196",
-    "email": "koa@boa.com"
+    "email": "koa@boa.com",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1927407477",
-    "email": "lo@finisco.it"
+    "email": "lo@finisco.it",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-1072677060",
-    "email": "lo@provo.com"
+    "email": "lo@provo.com",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-608746093",
-    "email": "fufu@fufu.com"
+    "email": "fufu@fufu.com",
+    "isFedelta": false
   },
   {
     "schemaVersion": 1,
     "userId": "user-223122470",
-    "email": "30@6.com"
+    "email": "30@6.com",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-1294947224",
+    "email": "pterodattilo@prete.com",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-1565793332",
+    "email": "pterodattilo@prete.it",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-1535966924",
+    "email": "gnarrau@gnam.it",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-834757550",
+    "email": "ko@ko.ko",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-752025299",
+    "email": "trash@sup.it",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-665089732",
+    "email": "try@ennesimo.it",
+    "isFedelta": false
   }
 ]
