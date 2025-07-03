@@ -1,32 +1,14 @@
 [
   {
     "schemaVersion": 1,
-    "userId": "user-846026373",
-    "email": "3@07.2025",
-    "isFedelta": false
+    "userId": "user-1140648639",
+    "email": "l@l.it",
+    "isFedelta": true
   },
   {
     "schemaVersion": 1,
-    "userId": "user-1103473837",
-    "email": "3@07.2025pt2",
-    "isFedelta": false
-  },
-  {
-    "schemaVersion": 1,
-    "userId": "user-436360037",
-    "email": "milano@bolo.it",
-    "isFedelta": false
-  },
-  {
-    "schemaVersion": 1,
-    "userId": "user-724347911",
-    "email": "prov@prov.it",
-    "isFedelta": false
-  },
-  {
-    "schemaVersion": 1,
-    "userId": "user-1766082492",
-    "email": "buuy@buy.it",
-    "isFedelta": false
+    "userId": "user-1671532377",
+    "email": "IO@IO.IT",
+    "isFedelta": true
   }
 ]

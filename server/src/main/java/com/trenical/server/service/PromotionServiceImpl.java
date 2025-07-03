@@ -23,7 +23,6 @@ public class PromotionServiceImpl extends PromotionServiceGrpc.PromotionServiceI
 
     public OffertaResponse getOffertaLocally(Tratta tratta, String userId) {
         System.out.println("🎁 Offerta generata per tratta " + tratta.getId() + " e utente " + userId);
-
         return gestore.calcolaMiglioreOfferta(tratta, userId);
     }
 }

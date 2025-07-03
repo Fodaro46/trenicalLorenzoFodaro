@@ -42,4 +42,7 @@ public class Utente {
     public void setFedelta(boolean fedelta) {
         isFedelta = fedelta;
     }
+    public boolean isStudente() {
+        return email != null && email.toLowerCase().endsWith("@studenti.unical.it");
+    }
 }

@@ -3,24 +3,17 @@ package com.trenical.server.sconto;
 import com.trenical.grpc.Tratta;
 
 public class ScontoStudente implements StrategiaSconto {
-
     @Override
-    public boolean isApplicabile(Tratta tratta, String userId) {
-        return userId != null && userId.contains("student"); // esempio banale
+    public boolean isApplicabile(ContestoSconto ctx) {
+        return ctx.getUtente() != null && ctx.getUtente().isStudente(); // usa modello utente reale
     }
 
     @Override
-    public double calcolaPrezzoScontato(Tratta tratta) {
-        return tratta.getPrezzo() * 0.8;
+    public double calcolaPrezzoScontato(ContestoSconto ctx) {
+        return ctx.getTratta().getPrezzo() * 0.80;
     }
 
-    @Override
-    public String getNome() {
-        return "Sconto Studente";
-    }
+    public String getNome() { return "Sconto Studente"; }
 
-    @Override
-    public String getDescrizione() {
-        return "20% di sconto per studenti";
-    }
+    public String getDescrizione() { return "20% di sconto per studenti"; }
 }

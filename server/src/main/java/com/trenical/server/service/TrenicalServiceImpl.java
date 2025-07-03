@@ -159,16 +159,19 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
     public void streamNotifiche(NotificheRequest req, StreamObserver<Notifica> obs) {
         String uid = req.getUserId();
 
+        // 1. Registra stream (solo se non già registrato)
         if (!StreamManager.isConnesso(uid)) {
             StreamManager.registra(uid, obs);
             System.out.println("[DEBUG] 🔔 Listener aggiunto per utente: " + uid);
         }
 
-        NotificationRegistry.markAllAsRead(uid);
-
+        // 2. Recupera notifiche non lette
         List<Notifica> pendenti = NotificationRegistry.getUnreadNotifications(uid);
+
+        // 3. Invia e marca come lette
         for (Notifica n : pendenti) {
             obs.onNext(n);
+            NotificationRegistry.markAsRead(uid, n.getId());
         }
     }
 

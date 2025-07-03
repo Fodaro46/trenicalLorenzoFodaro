@@ -3,8 +3,8 @@ package com.trenical.server.sconto;
 import com.trenical.grpc.Tratta;
 
 public interface StrategiaSconto {
-    boolean isApplicabile(Tratta tratta, String userId);
-    double calcolaPrezzoScontato(Tratta tratta);
+    boolean isApplicabile(ContestoSconto contesto);
+    double calcolaPrezzoScontato(ContestoSconto contesto);
     String getNome();
     String getDescrizione();
 }

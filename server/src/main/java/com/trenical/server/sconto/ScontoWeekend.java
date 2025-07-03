@@ -5,25 +5,19 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class ScontoWeekend implements StrategiaSconto {
-
     @Override
-    public boolean isApplicabile(Tratta tratta, String userId) {
-        DayOfWeek oggi = LocalDate.now().getDayOfWeek();
-        return oggi == DayOfWeek.SATURDAY || oggi == DayOfWeek.SUNDAY;
+    public boolean isApplicabile(ContestoSconto ctx) {
+        int day = ctx.getDataAcquisto().getDayOfWeek().getValue(); // 6=Sabato, 7=Domenica
+        return day == 6 || day == 7;
     }
 
     @Override
-    public double calcolaPrezzoScontato(Tratta tratta) {
-        return tratta.getPrezzo() * 0.85;
+    public double calcolaPrezzoScontato(ContestoSconto ctx) {
+        return ctx.getTratta().getPrezzo() * 0.90;
     }
 
-    @Override
-    public String getNome() {
-        return "Sconto Weekend";
-    }
+    public String getNome() { return "Sconto Weekend"; }
 
-    @Override
-    public String getDescrizione() {
-        return "15% di sconto nel weekend";
-    }
+    public String getDescrizione() { return "10% di sconto se acquisti nel weekend"; }
 }
+

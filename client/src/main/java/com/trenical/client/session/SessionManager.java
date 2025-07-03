@@ -79,7 +79,6 @@ public class SessionManager {
     }
 
     public synchronized void aggiungiListener(NotificaListener l) {
-        // Evita duplicati dello stesso tipo di listener
         for (NotificaListener existing : listeners) {
             if (existing.getClass().equals(l.getClass())) {
                 System.out.println("[DEBUG] Listener già registrato, ignorato: " + l.getClass().getSimpleName());
@@ -90,8 +89,10 @@ public class SessionManager {
         listeners.add(l);
         System.out.println("[DEBUG] Listener aggiunto: " + l.getClass().getSimpleName());
 
-        // 🔥 SOLUZIONE CHIAVE: Invia immediatamente tutte le notifiche accumulate al nuovo listener
-        inviaNotificheAccumulateAListener(l);
+        // 🔍 Reinvia solo se il listener è appena aggiunto E non ha ancora ricevuto le notifiche
+        // Condizione: se notifiche ricevute non sono già state notificate (non possiamo verificarlo senza uno stato per-listener)
+        // → disabilitato per evitare duplicati
+        // inviaNotificheAccumulateAListener(l);
     }
 
     public synchronized void rimuoviListener(NotificaListener l) {
