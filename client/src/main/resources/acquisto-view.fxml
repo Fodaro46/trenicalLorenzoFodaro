@@ -7,15 +7,14 @@
       fx:controller="com.trenical.client.controller.AcquistoController"
       alignment="CENTER" spacing="10" style="-fx-padding: 20;">
 
-    <!-- Label per mostrare la tratta selezionata -->
-    <Label fx:id="trattaLabel" text="Tratta selezionata: -"/>
+    <Label fx:id="trattaLabel" text="Tratta selezionata: -" />
 
-    <!-- Label per mostrare il prezzo -->
-    <Label fx:id="prezzoLabel" text="Prezzo: -"/>
+    <Label fx:id="prezzoLabel" text="Prezzo: -" />
 
-    <!-- DatePicker per scegliere la data -->
-    <DatePicker fx:id="dataPicker"/>
+    <DatePicker fx:id="dataPicker" />
 
-    <!-- Bottone che richiama onConfirmAcquisto() -->
+    <Label text="Orario partenza:"/>
+    <Label fx:id="orarioLabel" text="-" />
+
     <Button text="Conferma Acquisto" onAction="#onConfirmAcquisto"/>
 </VBox>

@@ -19,16 +19,18 @@ public class TicketHistoryController {
     @FXML private TableColumn<Ticket, String> colPartenza;
     @FXML private TableColumn<Ticket, String> colArrivo;
     @FXML private TableColumn<Ticket, String> colData;
+    @FXML private TableColumn<Ticket, String> colOrario;
     @FXML private TableColumn<Ticket, String> colStato;
     @FXML private TableColumn<Ticket, String> colPrezzo;
 
-    private final ManagedChannel channel = ManagedChannelBuilder
-            .forAddress("localhost", 50051)
-            .usePlaintext()
-            .build();
+    private ManagedChannel channel;
 
     @FXML
     public void initialize() {
+        channel = ManagedChannelBuilder.forAddress("localhost", 50051)
+                .usePlaintext()
+                .build();
+
         caricaStoricoBiglietti();
     }
 
@@ -43,13 +45,15 @@ public class TicketHistoryController {
 
             ObservableList<Ticket> tickets = FXCollections.observableArrayList();
             for (BigliettoInfo info : response.getBigliettiList()) {
-                String tratta = info.getPartenza() + " → " + info.getArrivo();
                 tickets.add(new Ticket(
                         info.getId(),
-                        tratta,
+                        info.getPartenza() + " → " + info.getArrivo(),
                         info.getTimestamp(),
+                        info.getOrario(),
                         "Confermato",
-                        info.getPrezzo()
+                        info.getPrezzo(),
+                        info.getPartenza(),
+                        info.getArrivo()
                 ));
             }
 
@@ -65,23 +69,18 @@ public class TicketHistoryController {
 
         } catch (Exception e) {
             showAlert("Errore caricamento storico: " + e.getMessage());
+        } finally {
+            if (channel != null && !channel.isShutdown()) {
+                channel.shutdownNow();
+            }
         }
     }
 
     private void setupColumns() {
-        colPartenza.setCellValueFactory(t -> {
-            String tratta = t.getValue().getTratta();
-            int sep = tratta.indexOf("→");
-            return new SimpleStringProperty(sep > 0 ? tratta.substring(0, sep).trim() : "?");
-        });
-
-        colArrivo.setCellValueFactory(t -> {
-            String tratta = t.getValue().getTratta();
-            int sep = tratta.indexOf("→");
-            return new SimpleStringProperty(sep > 0 ? tratta.substring(sep + 1).trim() : "?");
-        });
-
+        colPartenza.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getPartenza()));
+        colArrivo.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getArrivo()));
         colData.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getData()));
+        colOrario.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getOrario()));
         colStato.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getStato()));
         colPrezzo.setCellValueFactory(t ->
                 new SimpleStringProperty("€ " + String.format("%.2f", t.getValue().getPrezzo()))
@@ -92,11 +91,5 @@ public class TicketHistoryController {
 
     private void showAlert(String msg) {
         new Alert(Alert.AlertType.WARNING, msg).showAndWait();
-    }
-
-    public void shutdown() {
-        if (channel != null && !channel.isShutdown()) {
-            channel.shutdownNow();
-        }
     }
 }

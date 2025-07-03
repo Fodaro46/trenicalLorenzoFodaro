@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -11,13 +11,14 @@
 
     <Label text="Storico Biglietti" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
 
-    <TableView fx:id="tableView" prefHeight="250" prefWidth="700">
+    <TableView fx:id="tableView" prefHeight="250" prefWidth="800">
         <columns>
             <TableColumn fx:id="colPartenza" text="Partenza" prefWidth="150"/>
             <TableColumn fx:id="colArrivo" text="Arrivo" prefWidth="150"/>
-            <TableColumn fx:id="colData" text="Data" prefWidth="120"/>
+            <TableColumn fx:id="colData" text="Data" prefWidth="100"/>
+            <TableColumn fx:id="colOrario" text="Orario" prefWidth="80"/>
             <TableColumn fx:id="colStato" text="Stato" prefWidth="100"/>
-            <TableColumn fx:id="colPrezzo" text="Prezzo" prefWidth="120"/>
+            <TableColumn fx:id="colPrezzo" text="Prezzo" prefWidth="100"/>
         </columns>
     </TableView>
 </VBox>

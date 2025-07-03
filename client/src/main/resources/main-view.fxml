@@ -7,11 +7,16 @@
             fx:controller="com.trenical.client.controller.MainController">
 
     <top>
-        <Label fx:id="promoLabel"
-               text=""
-               visible="false"
-               alignment="CENTER"
-               style="-fx-text-fill: #2a9d8f; -fx-font-weight: bold; -fx-padding: 10px;"/>
+        <VBox spacing="4" alignment="CENTER" style="-fx-padding: 10;">
+            <Label fx:id="userLabel"
+                   text="Benvenuto"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+            <Label fx:id="promoLabel"
+                   text=""
+                   visible="false"
+                   alignment="CENTER"
+                   style="-fx-text-fill: #2a9d8f; -fx-font-weight: bold;" />
+        </VBox>
     </top>
 
     <left>
@@ -19,8 +24,6 @@
               style="-fx-padding: 15; -fx-background-color: #f0f0f0;">
             <Button text="Login" onAction="#showLogin" prefWidth="150"/>
             <Button text="Ricerca Tratte" onAction="#showTratte" prefWidth="150"/>
-            <Button text="Acquisto Biglietto" onAction="#showAcquisto" prefWidth="150"/>
-            <Button text="Cerca Ticket" onAction="#showTicket" prefWidth="150"/>
             <Button text="Storico Biglietti" onAction="#showStorico" prefWidth="150"/>
             <Button text="Notifiche" onAction="#showNotifiche" prefWidth="150"/>
             <Button text="Promozione Attiva" onAction="#showOfferta" prefWidth="150"/>

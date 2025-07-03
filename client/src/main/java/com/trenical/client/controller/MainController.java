@@ -19,9 +19,18 @@ import java.io.IOException;
 public class MainController {
 
     @FXML private StackPane contentPane;
-    @FXML private Label promoLabel; // Opzionale nel tuo FXML, può essere anche invisibile inizialmente
+    @FXML private Label promoLabel;
+    @FXML private Label userLabel;
 
     private TrattaController trattaController;
+
+    @FXML
+    public void initialize() {
+        var user = SessionManager.getInstance().getCurrentUser();
+        if (user != null && userLabel != null) {
+            userLabel.setText("Benvenuto, " + user.getEmail());
+        }
+    }
 
     private boolean checkLogin() {
         if (!SessionManager.getInstance().isLoggedIn()) {
@@ -47,21 +56,6 @@ public class MainController {
         }
     }
 
-    public void showAcquisto() {
-        if (!checkLogin()) return;
-        if (!checkTrattaSelection()) return;
-
-        Tratta sel = trattaController.getSelectedTratta();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/acquisto-view.fxml"));
-            Pane pane = loader.load();
-            AcquistoController controller = loader.getController();
-            controller.setTratta(sel);
-            contentPane.getChildren().setAll(pane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void showOfferta() {
         if (!checkLogin()) return;
@@ -80,14 +74,9 @@ public class MainController {
             e.printStackTrace();
         }
 
-        // opzionale: mostra badge promozione accanto
         aggiornaBadgePromozione(sel);
     }
 
-    public void showTicket() {
-        if (!checkLogin()) return;
-        loadView("ticket-view.fxml");
-    }
 
     public void showStorico() {
         if (!checkLogin()) return;

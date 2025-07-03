@@ -10,12 +10,12 @@ public class Biglietto {
     private String arrivo;
     private double prezzo;
     private String timestamp;
+    private String orario;
 
-    public Biglietto() {}
 
     public Biglietto(String id, String userId, String trattaId,
                      String partenza, String arrivo,
-                     double prezzo, String timestamp) {
+                     double prezzo, String timestamp, String orario) {
         this.schemaVersion = 1;
         this.id = id;
         this.userId = userId;
@@ -24,11 +24,13 @@ public class Biglietto {
         this.arrivo = arrivo;
         this.prezzo = prezzo;
         this.timestamp = timestamp;
+        this.orario = orario;
     }
 
     public int getSchemaVersion() {
         return schemaVersion;
     }
+
     public void setSchemaVersion(int schemaVersion) {
         this.schemaVersion = schemaVersion;
     }
@@ -53,4 +55,7 @@ public class Biglietto {
 
     public String getTimestamp() { return timestamp; }
     public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
+
+    public String getOrario() { return orario; }
+    public void setOrario(String orario) { this.orario = orario; }
 }

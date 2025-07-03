@@ -31,8 +31,8 @@
     "id": "9",
     "stazionePartenza": "milano",
     "stazioneArrivo": "bologna",
-    "orarioPartenza": "19:00",
-    "orarioArrivo": "21:30",
+    "orarioPartenza": "12:00",
+    "orarioArrivo": "15:00",
     "prezzo": 45.0
   },
   {
@@ -70,5 +70,14 @@
     "orarioPartenza": "5:50",
     "orarioArrivo": "8:50",
     "prezzo": 15.0
+  },
+  {
+    "schemaVersion": 1,
+    "id": "13",
+    "stazionePartenza": "milano",
+    "stazioneArrivo": "bologna",
+    "orarioPartenza": "18:00",
+    "orarioArrivo": "23:00",
+    "prezzo": 89.99
   }
 ]
