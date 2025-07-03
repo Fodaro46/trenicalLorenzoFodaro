@@ -20,7 +20,12 @@ public class ContestoSconto {
     public ContestoSconto(Tratta tratta, Utente utente) {
         this.tratta = tratta;
         this.utente = utente;
-
+        System.out.println("[CTX] ▶️ Tratta ricevuta:");
+        System.out.println("       • id: " + tratta.getId());
+        System.out.println("       • partenza: " + tratta.getStazionePartenza());
+        System.out.println("       • arrivo: " + tratta.getStazioneArrivo());
+        System.out.println("       • data: '" + tratta.getData() + "'");
+        System.out.println("       • orario: '" + tratta.getOrarioPartenza() + "'");
         try {
             this.dataViaggio = tratta.getData() != null && !tratta.getData().isBlank()
                     ? LocalDate.parse(tratta.getData())

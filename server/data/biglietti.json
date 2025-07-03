@@ -31,5 +31,126 @@
     "prezzo": 76.49149999999999,
     "timestamp": "2025-07-03",
     "orario": "19:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-1038704512-1751551395108",
+    "userId": "user-1140648639",
+    "trattaId": "12",
+    "partenza": "catanzaro",
+    "arrivo": "crotone",
+    "prezzo": 19.55,
+    "timestamp": "2025-07-03",
+    "orario": "18:10"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-1064508060-1751553568804",
+    "userId": "user-1569717525",
+    "trattaId": "9",
+    "partenza": "Milano",
+    "arrivo": "Bologna",
+    "prezzo": 45.0,
+    "timestamp": "2025-07-04",
+    "orario": "13:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-171279179-1751554048694",
+    "userId": "user-22582437",
+    "trattaId": "9",
+    "partenza": "Milano",
+    "arrivo": "Bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-07-03",
+    "orario": "15:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-171279179-1751554194717",
+    "userId": "user-22582437",
+    "trattaId": "12",
+    "partenza": "Catanzaro",
+    "arrivo": "Crotone",
+    "prezzo": 23.0,
+    "timestamp": "2025-07-12",
+    "orario": "19:10"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-583077301-1751555278256",
+    "userId": "user-505435630",
+    "trattaId": "9",
+    "partenza": "Milano",
+    "arrivo": "Bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-07-03",
+    "orario": "15:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-583077301-1751555484615",
+    "userId": "user-505435630",
+    "trattaId": "13",
+    "partenza": "Milano",
+    "arrivo": "Bologna",
+    "prezzo": 67.49249999999999,
+    "timestamp": "2025-07-03",
+    "orario": "19:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-369847207-1751555695467",
+    "userId": "user-978486344",
+    "trattaId": "9",
+    "partenza": "Milano",
+    "arrivo": "Bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-07-03",
+    "orario": "15:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-369847207-1751555722365",
+    "userId": "user-978486344",
+    "trattaId": "13",
+    "partenza": "Milano",
+    "arrivo": "Bologna",
+    "prezzo": 67.49249999999999,
+    "timestamp": "2025-07-03",
+    "orario": "19:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-369847207-1751555738814",
+    "userId": "user-978486344",
+    "trattaId": "9",
+    "partenza": "Milano",
+    "arrivo": "Bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-07-03",
+    "orario": "15:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-657974098-1751556460878",
+    "userId": "user-979954573",
+    "trattaId": "9",
+    "partenza": "Milano",
+    "arrivo": "Bologna",
+    "prezzo": 33.75,
+    "timestamp": "2025-07-03",
+    "orario": "15:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-199722440-1751556606672",
+    "userId": "user-14540400",
+    "trattaId": "13",
+    "partenza": "Milano",
+    "arrivo": "Bologna",
+    "prezzo": 67.49249999999999,
+    "timestamp": "2025-07-03",
+    "orario": "19:00"
   }
 ]

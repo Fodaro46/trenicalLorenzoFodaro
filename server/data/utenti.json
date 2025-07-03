@@ -10,5 +10,53 @@
     "userId": "user-1671532377",
     "email": "IO@IO.IT",
     "isFedelta": true
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-1569717525",
+    "email": "nuovo@nuovo.com",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-22582437",
+    "email": "oggi@prova.com",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-846179363",
+    "email": "lorenzo@fodaro.it",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-1005916379",
+    "email": "l@f.com",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-505435630",
+    "email": "prov@studenti.unical.it",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-978486344",
+    "email": "prov@prova.it",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-979954573",
+    "email": "prov@prov.com",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-14540400",
+    "email": "porco@dio.it",
+    "isFedelta": false
   }
 ]

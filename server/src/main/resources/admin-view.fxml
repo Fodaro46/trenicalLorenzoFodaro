@@ -14,6 +14,7 @@
 
     <center>
         <VBox spacing="10" style="-fx-padding: 10;">
+            <!-- Tratte -->
             <Label text="Tratte disponibili" style="-fx-font-size: 16px;" />
             <TableView fx:id="trattaTable">
                 <columns>
@@ -36,9 +37,31 @@
                 <TextField fx:id="orarioArrivoField" promptText="Orario Arrivo" />
                 <TextField fx:id="prezzoField" promptText="Prezzo" />
             </HBox>
+
             <HBox spacing="10">
                 <Button text="Aggiungi Tratta" onAction="#aggiungiTratta" />
+                <Button text="Aggiorna Tratta" onAction="#aggiornaTratta" />
             </HBox>
+
+            <Separator />
+
+            <!-- Utenti -->
+            <Label text="Utenti registrati" style="-fx-font-size: 16px;" />
+
+            <HBox spacing="10">
+                <TextField fx:id="searchUserField" promptText="Cerca per email..." />
+                <Button text="Cerca" onAction="#filtraUtentiPerEmail" />
+                <Button text="Reset" onAction="#resetFiltroUtenti" />
+                <Button text="Fedeltà ON/OFF" onAction="#toggleFedeltaUtente" />
+            </HBox>
+
+            <TableView fx:id="utentiTable">
+                <columns>
+                    <TableColumn fx:id="emailColumn" text="Email" />
+                    <TableColumn fx:id="fedeltaColumn" text="FedeltàTreno" />
+                </columns>
+            </TableView>
+
         </VBox>
     </center>
 </BorderPane>

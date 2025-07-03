@@ -2,7 +2,9 @@ package com.trenical.client.controller;
 
 import com.trenical.client.model.Tratta;
 import com.trenical.client.session.SessionManager;
-import com.trenical.grpc.*;
+import com.trenical.grpc.CercaTratteRequest;
+import com.trenical.grpc.CercaTratteResponse;
+import com.trenical.grpc.TrenicalServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -22,9 +24,11 @@ public class TrattaController {
 
     @FXML private TextField partenzaField;
     @FXML private TextField arrivoField;
+
     @FXML private TableView<Tratta> tableView;
     @FXML private TableColumn<Tratta, String> colPartenza;
     @FXML private TableColumn<Tratta, String> colArrivo;
+    @FXML private TableColumn<Tratta, String> colData;
     @FXML private TableColumn<Tratta, String> colOrarioPartenza;
     @FXML private TableColumn<Tratta, String> colOrarioArrivo;
     @FXML private TableColumn<Tratta, Double> colPrezzo;
@@ -35,22 +39,23 @@ public class TrattaController {
 
     @FXML
     public void initialize() {
-        // Setup tabella
+        // Colonne tabella
         colPartenza.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStazionePartenza()));
         colArrivo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStazioneArrivo()));
+        colData.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getData()));
         colOrarioPartenza.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrarioPartenza()));
         colOrarioArrivo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrarioArrivo()));
         colPrezzo.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getPrezzo()).asObject());
 
         tableView.setItems(trattaList);
 
-        // Avvio canale gRPC
+        // gRPC channel setup
         channel = ManagedChannelBuilder.forAddress("localhost", 50051)
                 .usePlaintext()
                 .build();
         stub = TrenicalServiceGrpc.newBlockingStub(channel);
 
-        // Chiudi il canale gRPC alla chiusura finestra
+        // chiusura canale gRPC alla chiusura finestra
         tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
@@ -58,7 +63,6 @@ public class TrattaController {
                         newWin.setOnHiding(e -> {
                             if (channel != null && !channel.isShutdown()) {
                                 channel.shutdownNow();
-                                System.out.println("🔌 Canale gRPC chiuso da TrattaController");
                             }
                         });
                     }
@@ -80,14 +84,13 @@ public class TrattaController {
         CercaTratteRequest req = CercaTratteRequest.newBuilder()
                 .setStazionePartenza(partenza)
                 .setStazioneArrivo(arrivo)
-                .setData("")  // eventualmente usabile in futuro
                 .build();
 
         try {
             CercaTratteResponse resp = stub.cercaTratte(req);
             trattaList.setAll(resp.getTratteList().stream().map(t ->
                     new Tratta(t.getId(), t.getStazionePartenza(), t.getStazioneArrivo(),
-                            t.getOrarioPartenza(), t.getOrarioArrivo(), t.getPrezzo())
+                            t.getData(), t.getOrarioPartenza(), t.getOrarioArrivo(), t.getPrezzo())
             ).toList());
 
             if (trattaList.isEmpty()) {

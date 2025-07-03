@@ -1,83 +1,302 @@
 [
   {
     "schemaVersion": 1,
-    "id": "12",
-    "stazionePartenza": "catanzaro",
-    "stazioneArrivo": "crotone",
-    "orarioPartenza": "18:10",
-    "orarioArrivo": "21:00",
-    "prezzo": 23.0
+    "id": "100",
+    "stazionePartenza": "Bari",
+    "stazioneArrivo": "Torino",
+    "data": "2025-08-07",
+    "orarioPartenza": "15:50",
+    "orarioArrivo": "18:05",
+    "prezzo": 106.24
   },
   {
     "schemaVersion": 1,
-    "id": "11",
-    "stazionePartenza": "Milano",
-    "stazioneArrivo": "Reggio Calabria",
-    "orarioPartenza": "12:15",
-    "orarioArrivo": "05:25",
-    "prezzo": 158.0
+    "id": "101",
+    "stazionePartenza": "Bari",
+    "stazioneArrivo": "Torino",
+    "data": "2025-09-26",
+    "orarioPartenza": "05:00",
+    "orarioArrivo": "08:00",
+    "prezzo": 71.89
   },
   {
     "schemaVersion": 1,
-    "id": "10",
-    "stazionePartenza": "catanzaro",
-    "stazioneArrivo": "lamezia",
-    "orarioPartenza": "19:00",
-    "orarioArrivo": "21:45",
-    "prezzo": 5.99
+    "id": "102",
+    "stazionePartenza": "Napoli",
+    "stazioneArrivo": "Firenze",
+    "data": "2025-07-25",
+    "orarioPartenza": "12:50",
+    "orarioArrivo": "16:35",
+    "prezzo": 106.91
   },
   {
     "schemaVersion": 1,
-    "id": "9",
-    "stazionePartenza": "milano",
-    "stazioneArrivo": "bologna",
-    "orarioPartenza": "13:00",
-    "orarioArrivo": "15:00",
-    "prezzo": 45.0
+    "id": "103",
+    "stazionePartenza": "Roma",
+    "stazioneArrivo": "Milano",
+    "data": "2025-07-26",
+    "orarioPartenza": "10:00",
+    "orarioArrivo": "12:00",
+    "prezzo": 103.58
   },
   {
     "schemaVersion": 1,
-    "id": "8",
-    "stazionePartenza": "Catanzaro",
-    "stazioneArrivo": "Cosenza Castiglione",
-    "orarioPartenza": "5:50",
-    "orarioArrivo": "8:50",
-    "prezzo": 15.0
+    "id": "104",
+    "stazionePartenza": "Trieste",
+    "stazioneArrivo": "Ancona",
+    "data": "2025-09-20",
+    "orarioPartenza": "16:50",
+    "orarioArrivo": "19:50",
+    "prezzo": 88.93
   },
   {
     "schemaVersion": 1,
-    "id": "7",
-    "stazionePartenza": "cosenza",
-    "stazioneArrivo": "salerno",
-    "orarioPartenza": "6:50",
-    "orarioArrivo": "9:00",
-    "prezzo": 27.98
+    "id": "105",
+    "stazionePartenza": "Catania",
+    "stazioneArrivo": "Venezia",
+    "data": "2025-09-27",
+    "orarioPartenza": "12:30",
+    "orarioArrivo": "17:30",
+    "prezzo": 63.71
   },
   {
     "schemaVersion": 1,
-    "id": "8",
-    "stazionePartenza": "Catanzaro",
-    "stazioneArrivo": "Cosenza Castiglione",
-    "orarioPartenza": "5:50",
-    "orarioArrivo": "8:50",
-    "prezzo": 15.0
+    "id": "106",
+    "stazionePartenza": "Verona",
+    "stazioneArrivo": "Lecce",
+    "data": "2025-09-18",
+    "orarioPartenza": "19:10",
+    "orarioArrivo": "21:25",
+    "prezzo": 97.37
   },
   {
     "schemaVersion": 1,
-    "id": "5",
-    "stazionePartenza": "parapippo",
-    "stazioneArrivo": "parapippool",
-    "orarioPartenza": "5:50",
-    "orarioArrivo": "8:50",
-    "prezzo": 15.0
+    "id": "107",
+    "stazionePartenza": "Trieste",
+    "stazioneArrivo": "Ancona",
+    "data": "2025-09-22",
+    "orarioPartenza": "12:50",
+    "orarioArrivo": "18:20",
+    "prezzo": 86.89
   },
   {
     "schemaVersion": 1,
-    "id": "13",
-    "stazionePartenza": "milano",
-    "stazioneArrivo": "bologna",
-    "orarioPartenza": "19:00",
-    "orarioArrivo": "23:00",
-    "prezzo": 89.99
+    "id": "108",
+    "stazionePartenza": "Verona",
+    "stazioneArrivo": "Lecce",
+    "data": "2025-07-28",
+    "orarioPartenza": "16:00",
+    "orarioArrivo": "19:00",
+    "prezzo": 99.01
+  },
+  {
+    "schemaVersion": 1,
+    "id": "109",
+    "stazionePartenza": "Perugia",
+    "stazioneArrivo": "Modena",
+    "data": "2025-08-20",
+    "orarioPartenza": "11:00",
+    "orarioArrivo": "16:00",
+    "prezzo": 54.6
+  },
+  {
+    "schemaVersion": 1,
+    "id": "110",
+    "stazionePartenza": "Perugia",
+    "stazioneArrivo": "Modena",
+    "data": "2025-07-29",
+    "orarioPartenza": "12:30",
+    "orarioArrivo": "17:30",
+    "prezzo": 123.23
+  },
+  {
+    "schemaVersion": 1,
+    "id": "111",
+    "stazionePartenza": "Perugia",
+    "stazioneArrivo": "Modena",
+    "data": "2025-07-31",
+    "orarioPartenza": "16:20",
+    "orarioArrivo": "17:50",
+    "prezzo": 98.09
+  },
+  {
+    "schemaVersion": 1,
+    "id": "112",
+    "stazionePartenza": "Palermo",
+    "stazioneArrivo": "Genova",
+    "data": "2025-07-09",
+    "orarioPartenza": "06:00",
+    "orarioArrivo": "07:15",
+    "prezzo": 19.74
+  },
+  {
+    "schemaVersion": 1,
+    "id": "113",
+    "stazionePartenza": "Pisa",
+    "stazioneArrivo": "Bologna",
+    "data": "2025-09-26",
+    "orarioPartenza": "05:20",
+    "orarioArrivo": "08:35",
+    "prezzo": 90.97
+  },
+  {
+    "schemaVersion": 1,
+    "id": "114",
+    "stazionePartenza": "Bari",
+    "stazioneArrivo": "Torino",
+    "data": "2025-08-18",
+    "orarioPartenza": "07:00",
+    "orarioArrivo": "09:00",
+    "prezzo": 40.09
+  },
+  {
+    "schemaVersion": 1,
+    "id": "115",
+    "stazionePartenza": "Catania",
+    "stazioneArrivo": "Venezia",
+    "data": "2025-08-29",
+    "orarioPartenza": "20:20",
+    "orarioArrivo": "24:05",
+    "prezzo": 64.64
+  },
+  {
+    "schemaVersion": 1,
+    "id": "116",
+    "stazionePartenza": "Pisa",
+    "stazioneArrivo": "Bologna",
+    "data": "2025-07-05",
+    "orarioPartenza": "07:00",
+    "orarioArrivo": "12:15",
+    "prezzo": 122.8
+  },
+  {
+    "schemaVersion": 1,
+    "id": "117",
+    "stazionePartenza": "Trieste",
+    "stazioneArrivo": "Ancona",
+    "data": "2025-07-30",
+    "orarioPartenza": "20:40",
+    "orarioArrivo": "25:40",
+    "prezzo": 51.79
+  },
+  {
+    "schemaVersion": 1,
+    "id": "118",
+    "stazionePartenza": "Palermo",
+    "stazioneArrivo": "Genova",
+    "data": "2025-09-15",
+    "orarioPartenza": "14:20",
+    "orarioArrivo": "18:50",
+    "prezzo": 30.28
+  },
+  {
+    "schemaVersion": 1,
+    "id": "119",
+    "stazionePartenza": "Reggio Calabria",
+    "stazioneArrivo": "Trento",
+    "data": "2025-07-16",
+    "orarioPartenza": "10:50",
+    "orarioArrivo": "15:50",
+    "prezzo": 85.31
+  },
+  {
+    "schemaVersion": 1,
+    "id": "120",
+    "stazionePartenza": "Catania",
+    "stazioneArrivo": "Venezia",
+    "data": "2025-09-30",
+    "orarioPartenza": "19:20",
+    "orarioArrivo": "24:05",
+    "prezzo": 78.8
+  },
+  {
+    "schemaVersion": 1,
+    "id": "121",
+    "stazionePartenza": "Trieste",
+    "stazioneArrivo": "Ancona",
+    "data": "2025-07-20",
+    "orarioPartenza": "13:50",
+    "orarioArrivo": "17:20",
+    "prezzo": 88.78
+  },
+  {
+    "schemaVersion": 1,
+    "id": "122",
+    "stazionePartenza": "Trieste",
+    "stazioneArrivo": "Ancona",
+    "data": "2025-07-22",
+    "orarioPartenza": "17:00",
+    "orarioArrivo": "22:30",
+    "prezzo": 86.58
+  },
+  {
+    "schemaVersion": 1,
+    "id": "123",
+    "stazionePartenza": "Perugia",
+    "stazioneArrivo": "Modena",
+    "data": "2025-09-20",
+    "orarioPartenza": "07:50",
+    "orarioArrivo": "11:20",
+    "prezzo": 66.71
+  },
+  {
+    "schemaVersion": 1,
+    "id": "124",
+    "stazionePartenza": "Reggio Calabria",
+    "stazioneArrivo": "Trento",
+    "data": "2025-07-21",
+    "orarioPartenza": "19:10",
+    "orarioArrivo": "21:10",
+    "prezzo": 104.05
+  },
+  {
+    "schemaVersion": 1,
+    "id": "125",
+    "stazionePartenza": "Reggio Calabria",
+    "stazioneArrivo": "Trento",
+    "data": "2025-08-04",
+    "orarioPartenza": "16:10",
+    "orarioArrivo": "19:55",
+    "prezzo": 125.1
+  },
+  {
+    "schemaVersion": 1,
+    "id": "126",
+    "stazionePartenza": "Pisa",
+    "stazioneArrivo": "Bologna",
+    "data": "2025-07-27",
+    "orarioPartenza": "08:10",
+    "orarioArrivo": "11:40",
+    "prezzo": 55.9
+  },
+  {
+    "schemaVersion": 1,
+    "id": "127",
+    "stazionePartenza": "Bari",
+    "stazioneArrivo": "Torino",
+    "data": "2025-09-02",
+    "orarioPartenza": "13:50",
+    "orarioArrivo": "19:05",
+    "prezzo": 68.44
+  },
+  {
+    "schemaVersion": 1,
+    "id": "128",
+    "stazionePartenza": "Perugia",
+    "stazioneArrivo": "Modena",
+    "data": "2025-09-03",
+    "orarioPartenza": "20:30",
+    "orarioArrivo": "26:15",
+    "prezzo": 113.16
+  },
+  {
+    "schemaVersion": 1,
+    "id": "129",
+    "stazionePartenza": "Roma",
+    "stazioneArrivo": "Milano",
+    "data": "2025-07-25",
+    "orarioPartenza": "10:00",
+    "orarioArrivo": "15:15",
+    "prezzo": 24.02
   }
 ]

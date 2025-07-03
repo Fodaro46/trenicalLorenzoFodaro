@@ -6,18 +6,20 @@ import com.trenical.grpc.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class AcquistoController {
 
     @FXML private Label trattaLabel;
-    @FXML private Label prezzoLabel;
+    @FXML private Label dataLabel;
     @FXML private Label orarioLabel;
-    @FXML private DatePicker dataPicker;
+    @FXML private Label prezzoLabel;
 
     private Tratta tratta;
     private double prezzoFinale;
@@ -29,34 +31,31 @@ public class AcquistoController {
                 .usePlaintext()
                 .build();
 
-        dataPicker.setValue(LocalDate.now());
-        dataPicker.setDayCellFactory(getDayCellFactory());
-    }
-
-    private Callback<DatePicker, DateCell> getDayCellFactory() {
-        return picker -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                setDisable(empty || item.isBefore(LocalDate.now()));
-            }
-        };
+        // Chiude il canale se l’utente chiude la finestra senza acquistare
+        try {
+            trattaLabel.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    newScene.windowProperty().addListener((obsW, oldW, newW) -> {
+                        if (newW != null) {
+                            ((Stage) newW).setOnHiding(e -> shutdown());
+                        }
+                    });
+                }
+            });
+        } catch (Exception ignored) {}
     }
 
     public void setTratta(Tratta t) {
         this.tratta = t;
         trattaLabel.setText(t.getStazionePartenza() + " → " + t.getStazioneArrivo());
-        orarioLabel.setText(t.getOrarioPartenza());  // mostra ma non modifica
+        dataLabel.setText("Data: " + t.getData());
+        orarioLabel.setText("Orario: " + t.getOrarioPartenza());
         calcolaPrezzoScontato(t);
     }
 
     private void calcolaPrezzoScontato(Tratta t) {
         try {
             var stub = PromotionServiceGrpc.newBlockingStub(channel);
-            String data = dataPicker.getValue() != null
-                    ? dataPicker.getValue().toString()
-                    : LocalDate.now().toString();
-
             OffertaResponse offerta = stub.getOfferta(
                     GetOffertaRequest.newBuilder()
                             .setUserId(SessionManager.getInstance().getCurrentUser().getUserId())
@@ -67,7 +66,7 @@ public class AcquistoController {
                                     .setOrarioPartenza(t.getOrarioPartenza())
                                     .setOrarioArrivo(t.getOrarioArrivo())
                                     .setPrezzo(t.getPrezzo())
-                                    .setData(data)
+                                    .setData(t.getData())
                                     .build())
                             .build()
             );
@@ -82,22 +81,26 @@ public class AcquistoController {
 
     @FXML
     private void onConfirmAcquisto() {
-        if (dataPicker.getValue() == null) {
-            new Alert(Alert.AlertType.WARNING, "Seleziona la data del viaggio.").showAndWait();
-            return;
-        }
-
-        String data = dataPicker.getValue().toString();
-        String orario = tratta.getOrarioPartenza();  // orario FISSO
-
         try {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDate data = LocalDate.parse(tratta.getData());
+            LocalTime orario = LocalTime.parse(tratta.getOrarioPartenza());
+            LocalDateTime partenza = LocalDateTime.of(data, orario);
+
+            if (partenza.isBefore(now)) {
+                new Alert(Alert.AlertType.ERROR,
+                        "Non puoi acquistare biglietti per un orario già passato.")
+                        .showAndWait();
+                return;
+            }
+
             var stub = TrenicalServiceGrpc.newBlockingStub(channel);
             stub.acquistaBiglietto(
                     BigliettoRequest.newBuilder()
                             .setUserId(SessionManager.getInstance().getCurrentUser().getUserId())
                             .setTratta(tratta.getId())
-                            .setData(data)
-                            .setOrario(orario)
+                            .setData(tratta.getData())
+                            .setOrario(tratta.getOrarioPartenza())
                             .build()
             );
 
@@ -105,16 +108,19 @@ public class AcquistoController {
                     "Acquisto confermato!\nPrezzo finale: € " + String.format("%.2f", prezzoFinale))
                     .showAndWait();
 
-            if (channel != null && !channel.isShutdown()) {
-                channel.shutdownNow();
-            }
-
-            // Chiude solo la finestra attuale
-            Stage currentStage = (Stage) dataPicker.getScene().getWindow();
-            currentStage.close();
-
         } catch (Exception ex) {
             new Alert(Alert.AlertType.ERROR, "Errore durante l'acquisto: " + ex.getMessage()).showAndWait();
+        } finally {
+            shutdown();
+            Stage currentStage = (Stage) trattaLabel.getScene().getWindow();
+            currentStage.close();
+        }
+    }
+
+
+    private void shutdown() {
+        if (channel != null && !channel.isShutdown()) {
+            channel.shutdownNow();
         }
     }
 }

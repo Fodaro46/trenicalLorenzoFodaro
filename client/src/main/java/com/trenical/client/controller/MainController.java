@@ -118,7 +118,7 @@ public class MainController {
                 .setOrarioPartenza(sel.getOrarioPartenza())
                 .setOrarioArrivo(sel.getOrarioArrivo())
                 .setPrezzo(sel.getPrezzo())
-                .setData("")
+                .setData(sel.getData())
                 .build();
     }
 

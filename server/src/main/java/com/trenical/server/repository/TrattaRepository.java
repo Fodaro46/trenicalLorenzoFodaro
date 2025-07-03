@@ -30,6 +30,20 @@ public class TrattaRepository {
             throw new RuntimeException("Errore lettura tratte", e);
         }
     }
+    public static synchronized void aggiornaTratta(Tratta nuova) {
+        List<Tratta> list = caricaTratte();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId().equals(nuova.getId())) {
+                list.set(i, nuova);
+                salvaTratte(list);
+                return;
+            }
+        }
+        // Se non esiste, la aggiunge
+        list.add(nuova);
+        salvaTratte(list);
+    }
+
 
     public static synchronized void salvaTratte(List<Tratta> tratte) {
         for (Tratta t : tratte) {

@@ -2,8 +2,8 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
+
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.trenical.client.controller.TrattaController">
@@ -24,6 +24,7 @@
             <columns>
                 <TableColumn text="Partenza" fx:id="colPartenza"/>
                 <TableColumn text="Arrivo" fx:id="colArrivo"/>
+                <TableColumn text="Data" fx:id="colData"/>
                 <TableColumn text="Partenza Ore" fx:id="colOrarioPartenza"/>
                 <TableColumn text="Arrivo Ore" fx:id="colOrarioArrivo"/>
                 <TableColumn text="Prezzo" fx:id="colPrezzo"/>

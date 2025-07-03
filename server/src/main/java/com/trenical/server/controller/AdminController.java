@@ -34,7 +34,14 @@ public class AdminController {
     @FXML private TableColumn<Tratta, String> orarioArrivoColumn;
     @FXML private TableColumn<Tratta, String> prezzoColumn;
 
+    // Utenti
+    @FXML private TextField searchUserField;
+    @FXML private TableView<Utente> utentiTable;
+    @FXML private TableColumn<Utente, String> emailColumn;
+    @FXML private TableColumn<Utente, String> fedeltaColumn;
+
     private final ObservableList<Tratta> tratte = FXCollections.observableArrayList();
+    private final ObservableList<Utente> utenti = FXCollections.observableArrayList();
 
     // gRPC
     private ManagedChannel channel;
@@ -42,10 +49,12 @@ public class AdminController {
 
     @FXML
     public void initialize() {
+        // gRPC
         channel = ManagedChannelBuilder.forAddress("localhost", 50051)
                 .usePlaintext().build();
         blockingStub = TrenicalServiceGrpc.newBlockingStub(channel);
 
+        // Tratte
         codiceColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getId()));
         partenzaColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getStazionePartenza()));
         arrivoColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getStazioneArrivo()));
@@ -67,6 +76,15 @@ public class AdminController {
                 prezzoField.setText(String.valueOf(sel.getPrezzo()));
             }
         });
+
+        // Utenti
+        emailColumn.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getEmail()));
+        fedeltaColumn.setCellValueFactory(cd ->
+                new SimpleStringProperty(cd.getValue().isFedelta() ? "SÌ" : "NO")
+        );
+
+        utentiTable.setItems(utenti);
+        utenti.setAll(UtenteRepository.caricaTutti());
     }
 
     @FXML
@@ -98,6 +116,75 @@ public class AdminController {
         TrattaRepository.aggiungiTratta(nuova);
         clearFields();
         showInfo("Tratta aggiunta!");
+    }
+
+    @FXML
+    public void aggiornaTratta() {
+        String codice = codiceField.getText().trim();
+        String partenza = partenzaField.getText().trim();
+        String arrivo = arrivoField.getText().trim();
+        String data = dataField.getText().trim();
+        String orarioPartenza = orarioPartenzaField.getText().trim();
+        String orarioArrivo = orarioArrivoField.getText().trim();
+        String prezzoStr = prezzoField.getText().trim();
+
+        if (codice.isEmpty() || partenza.isEmpty() || arrivo.isEmpty() || data.isEmpty() ||
+                orarioPartenza.isEmpty() || orarioArrivo.isEmpty() || prezzoStr.isEmpty()) {
+            showAlert("Compila tutti i campi.");
+            return;
+        }
+
+        double prezzo;
+        try {
+            prezzo = Double.parseDouble(prezzoStr);
+        } catch (NumberFormatException e) {
+            showAlert("Prezzo non valido.");
+            return;
+        }
+
+        Tratta aggiornata = new Tratta(codice, partenza, arrivo, data, orarioPartenza, orarioArrivo, prezzo);
+        TrattaRepository.aggiornaTratta(aggiornata);
+
+        var grpcTratta = com.trenical.grpc.Tratta.newBuilder()
+                .setId(codice)
+                .setStazionePartenza(partenza)
+                .setStazioneArrivo(arrivo)
+                .setData(data)
+                .setOrarioPartenza(orarioPartenza)
+                .setOrarioArrivo(orarioArrivo)
+                .setPrezzo(prezzo)
+                .build();
+        blockingStub.updateTratta(UpdateTrattaRequest.newBuilder().setTratta(grpcTratta).build());
+
+        tratte.setAll(TrattaRepository.caricaTratte());
+        showInfo("Tratta aggiornata.");
+    }
+
+    @FXML
+    public void filtraUtentiPerEmail() {
+        String filtro = searchUserField.getText().toLowerCase().trim();
+        if (filtro.isEmpty()) return;
+        utenti.setAll(UtenteRepository.caricaTutti().stream()
+                .filter(u -> u.getEmail().toLowerCase().contains(filtro))
+                .toList());
+    }
+
+    @FXML
+    public void resetFiltroUtenti() {
+        utenti.setAll(UtenteRepository.caricaTutti());
+    }
+
+    @FXML
+    public void toggleFedeltaUtente() {
+        Utente sel = utentiTable.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            showAlert("Seleziona un utente.");
+            return;
+        }
+        sel.setFedelta(!sel.isFedelta());
+        UtenteRepository.salvaUtente(sel);
+        utenti.setAll(UtenteRepository.caricaTutti());
+        showInfo("Stato fedeltà aggiornato.");
     }
 
     private void clearFields() {

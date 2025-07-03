@@ -8,13 +8,8 @@
       alignment="CENTER" spacing="10" style="-fx-padding: 20;">
 
     <Label fx:id="trattaLabel" text="Tratta selezionata: -" />
-
+    <Label fx:id="dataLabel" text="Data: -" />
+    <Label fx:id="orarioLabel" text="Orario partenza: -" />
     <Label fx:id="prezzoLabel" text="Prezzo: -" />
-
-    <DatePicker fx:id="dataPicker" />
-
-    <Label text="Orario partenza:"/>
-    <Label fx:id="orarioLabel" text="-" />
-
     <Button text="Conferma Acquisto" onAction="#onConfirmAcquisto"/>
 </VBox>

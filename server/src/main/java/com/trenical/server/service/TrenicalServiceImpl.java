@@ -124,7 +124,7 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
                         .setOrarioPartenza(t.getOrarioPartenza())
                         .setOrarioArrivo(t.getOrarioArrivo())
                         .setPrezzo(t.getPrezzo())
-                        .setData("")
+                        .setData(t.getData() != null ? t.getData() : "")
                         .build());
             }
         }
@@ -159,16 +159,13 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
     public void streamNotifiche(NotificheRequest req, StreamObserver<Notifica> obs) {
         String uid = req.getUserId();
 
-        // 1. Registra stream (solo se non già registrato)
         if (!StreamManager.isConnesso(uid)) {
             StreamManager.registra(uid, obs);
             System.out.println("[DEBUG] 🔔 Listener aggiunto per utente: " + uid);
         }
 
-        // 2. Recupera notifiche non lette
         List<Notifica> pendenti = NotificationRegistry.getUnreadNotifications(uid);
 
-        // 3. Invia e marca come lette
         for (Notifica n : pendenti) {
             obs.onNext(n);
             NotificationRegistry.markAsRead(uid, n.getId());
@@ -183,7 +180,7 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
         tratte = tratte.stream()
                 .map(t -> t.getId().equals(g.getId())
                         ? new Tratta(g.getId(), g.getStazionePartenza(), g.getStazioneArrivo(),
-                        g.getOrarioPartenza(), g.getOrarioArrivo(), g.getPrezzo())
+                        g.getData(), g.getOrarioPartenza(), g.getOrarioArrivo(), g.getPrezzo())
                         : t)
                 .collect(Collectors.toList());
 
