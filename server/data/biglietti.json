@@ -152,5 +152,27 @@
     "prezzo": 67.49249999999999,
     "timestamp": "2025-07-03",
     "orario": "19:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-1132932031-1751616699477",
+    "userId": "user-2014569677",
+    "trattaId": "103",
+    "partenza": "Roma",
+    "arrivo": "Milano",
+    "prezzo": 103.58,
+    "timestamp": "2025-07-26",
+    "orario": "10:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-1132932031-1751616846967",
+    "userId": "user-2014569677",
+    "trattaId": "103",
+    "partenza": "Roma",
+    "arrivo": "Milano",
+    "prezzo": 88.04299999999999,
+    "timestamp": "2025-07-26",
+    "orario": "10:00"
   }
 ]
