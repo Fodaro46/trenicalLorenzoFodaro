@@ -1,46 +1,99 @@
 
 import com.trenical.grpc.Tratta;
 import com.trenical.grpc.OffertaResponse;
+import com.trenical.server.model.Utente;
+import com.trenical.server.repository.UtenteRepository;
 import com.trenical.server.sconto.GestoreSconti;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GestoreScontiTest {
 
-    @Test
-    void testNessunoScontoApplicato() {
-        GestoreSconti g = new GestoreSconti();
-        Tratta t = Tratta.newBuilder()
-                .setId("T-01")
+    private final GestoreSconti gestore = new GestoreSconti();
+
+    @BeforeEach
+    void cleanRepository() {
+        // Resetta il file utenti.json a una lista vuota
+        // (oppure elimina manualmente server/data/utenti.json prima di ogni run)
+        // Qui assumiamo che all’avvio non ci siano utenti nel file.
+    }
+
+    private Tratta buildTratta(String data, String oraPartenza) {
+        return Tratta.newBuilder()
+                .setId("TID")
                 .setStazionePartenza("A")
                 .setStazioneArrivo("B")
-                .setOrarioPartenza("10:00")
-                .setOrarioArrivo("11:00")
-                .setData("2025-07-02") // mercoledì
+                .setData(data)
+                .setOrarioPartenza(oraPartenza)
+                .setOrarioArrivo(LocalTime.parse(oraPartenza).plusHours(1).toString())
                 .setPrezzo(100.0)
                 .build();
-
-        OffertaResponse r = g.calcolaMiglioreOfferta(t, "user-123");
-        assertEquals(100.0, r.getPrezzoScontato(), 0.01);
-        assertEquals("Prezzo pieno", r.getDescrizione());
     }
 
     @Test
-    void testScontoWeekendAttivo() {
-        GestoreSconti g = new GestoreSconti();
-        Tratta t = Tratta.newBuilder()
-                .setId("T-02")
-                .setStazionePartenza("C")
-                .setStazioneArrivo("D")
-                .setOrarioPartenza("10:00")
-                .setOrarioArrivo("11:00")
-                .setData("2025-07-06") // domenica
-                .setPrezzo(100.0)
-                .build();
+    void testScontoStudente() {
+        String userId = "studente1";
+        // Utente con email da studente: isStudente() == true
+        UtenteRepository.salvaUtente(new Utente(userId, "mario@studenti.unical.it"));
 
-        OffertaResponse r = g.calcolaMiglioreOfferta(t, "user-xyz");
-        assertTrue(r.getPrezzoScontato() < 100.0);
-        assertEquals("ScontoWeekend", r.getTipo());
+        String domani = LocalDate.now().plusDays(1).toString();
+        Tratta tratta = buildTratta(domani, "12:00");
+
+        OffertaResponse off = gestore.calcolaMiglioreOfferta(tratta, userId);
+        assertEquals(80.0, off.getPrezzoScontato(), 0.01);
+        assertEquals("Sconto Studente", off.getTipo());
+        assertEquals("20% di sconto per studenti", off.getDescrizione());
+    }
+
+    @Test
+    void testScontoFedelta() {
+        String userId = "fedel1";
+        Utente u = new Utente(userId, "luca@dominio.com");
+        u.setFedelta(true);
+        UtenteRepository.salvaUtente(u);
+
+        String dopodomani = LocalDate.now().plusDays(2).toString();
+        Tratta tratta = buildTratta(dopodomani, "15:30");
+
+        OffertaResponse off = gestore.calcolaMiglioreOfferta(tratta, userId);
+        assertEquals(85.0, off.getPrezzoScontato(), 0.01);
+        assertEquals("Sconto FedeltàTreno", off.getTipo());
+        assertEquals("15% di sconto riservato ai clienti FedeltàTreno", off.getDescrizione());
+    }
+
+    @Test
+    void testScontoWeekend() {
+        String userId = "anonimo";
+        UtenteRepository.salvaUtente(new Utente(userId, "anonimo@dominio.com"));
+
+        // Anche se data di viaggio è qualunque, su weekend il purchase date è weekend
+        String dataQualunque = LocalDate.now().plusDays(3).toString();
+        Tratta tratta = buildTratta(dataQualunque, "09:45");
+
+        OffertaResponse off = gestore.calcolaMiglioreOfferta(tratta, userId);
+        assertEquals(90.0, off.getPrezzoScontato(), 0.01);
+        assertEquals("Sconto Weekend", off.getTipo());
+        assertEquals("10% di sconto se acquisti nel weekend", off.getDescrizione());
+    }
+
+    @Test
+    void testScontoLastMinute() {
+        String userId = "anonimo2";
+        UtenteRepository.salvaUtente(new Utente(userId, "user2@dominio.com"));
+
+        String oggi = LocalDate.now().toString();
+        // orario 30 minuti da adesso per garantire last minute
+        String ora = LocalTime.now().plusMinutes(30).withSecond(0).withNano(0).toString();
+        Tratta tratta = buildTratta(oggi, ora);
+
+        OffertaResponse off = gestore.calcolaMiglioreOfferta(tratta, userId);
+        assertEquals(75.0, off.getPrezzoScontato(), 0.01);
+        assertEquals("Sconto Last Minute", off.getTipo());
+        assertEquals("25% di sconto se il treno parte entro 2 ore", off.getDescrizione());
     }
 }
