@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.trenical.grpc";
+option java_outer_classname = "TrenicalProto";
+
+package trenical;
+
+service TrenicalService {
+  rpc GetTicketInfo        (TicketRequest)             returns (TicketResponse);
+  rpc Login                (LoginRequest)              returns (LoginResponse);
+  rpc AcquistaBiglietto    (BigliettoRequest)          returns (BigliettoResponse);
+  rpc StreamNotifiche      (NotificheRequest)          returns (stream Notifica);
+  rpc GetStoricoBiglietti  (UserIdRequest)             returns (StoricoBigliettiResponse);
+  rpc CercaTratte          (CercaTratteRequest)        returns (CercaTratteResponse);
+  rpc UpdateTratta         (UpdateTrattaRequest)       returns (google.protobuf.Empty);
+}
+
+service PromotionService {
+  rpc GetOfferta (GetOffertaRequest) returns (OffertaResponse);
+}
+
+// --- Tratta ---
+message Tratta {
+  string id                = 1;
+  string stazione_partenza = 2;
+  string stazione_arrivo   = 3;
+  string data              = 4;
+  string orario_partenza   = 5;
+  string orario_arrivo     = 6;
+  double prezzo            = 7;
+}
+
+// --- Ricerca tratte ---
+message CercaTratteRequest {
+  string stazione_partenza = 1;
+  string stazione_arrivo   = 2;
+  string data              = 3;
+}
+
+message CercaTratteResponse {
+  repeated Tratta tratte = 1;
+}
+
+// --- Update tratta ---
+message UpdateTrattaRequest {
+  Tratta tratta = 1;
+}
+
+// --- Offerta ---
+message GetOffertaRequest {
+  Tratta tratta = 1;
+  string userId = 2;
+}
+
+message OffertaResponse {
+  string tipo            = 1;
+  double prezzo_scontato = 2;
+  string descrizione     = 3;
+}
+
+// --- Ticket info ---
+message TicketRequest {
+  string ticket_id = 1;
+}
+
+message TicketResponse {
+  string ticket_id      = 1;
+  string passenger_name = 2;
+  string train_number   = 3;
+  string departure_time = 4;
+  string arrival_time   = 5;
+  double prezzo         = 6;
+}
+
+// --- Login ---
+message LoginRequest {
+  string email = 1;
+}
+
+message LoginResponse {
+  string userId  = 1;
+  string message = 2;
+}
+
+// --- Biglietto ---
+message BigliettoRequest {
+  string userId = 1;
+  string tratta = 2;
+  string data   = 3;
+  string orario = 4;
+}
+
+message BigliettoResponse {
+  string bigliettoId = 1;
+  string stato       = 2;
+  double prezzo      = 3;
+  string trattaId    = 4;
+  string data        = 5;
+  string orario      = 6;
+}
+
+// --- Notifiche ---
+message NotificheRequest {
+  string userId = 1;
+}
+
+message Notifica {
+  string id        = 1;
+  string userId    = 2;
+  string messaggio = 3;
+  string timestamp = 4;
+}
+
+// --- Storico Biglietti ---
+message UserIdRequest {
+  string userId = 1;
+}
+
+message BigliettoInfo {
+  string id        = 1;
+  string tratta_id = 2;
+  string partenza  = 3;
+  string arrivo    = 4;
+  double prezzo    = 5;
+  string timestamp = 6;
+  string orario    = 7;
+}
+
+message StoricoBigliettiResponse {
+  repeated BigliettoInfo biglietti = 1;
+}

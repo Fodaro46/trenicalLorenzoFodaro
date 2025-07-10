@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.trenical.client.controller.MainController">
+
+    <top>
+        <VBox spacing="4" alignment="CENTER" style="-fx-padding: 10;">
+            <Label fx:id="userLabel"
+                   text="Benvenuto"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+            <Label fx:id="promoLabel"
+                   text=""
+                   visible="false"
+                   alignment="CENTER"
+                   style="-fx-text-fill: #2a9d8f; -fx-font-weight: bold;" />
+        </VBox>
+    </top>
+
+    <left>
+        <VBox spacing="12" alignment="TOP_CENTER"
+              style="-fx-padding: 15; -fx-background-color: #f0f0f0;">
+            <Button text="Login" onAction="#showLogin" prefWidth="150"/>
+            <Button text="Ricerca Tratte" onAction="#showTratte" prefWidth="150"/>
+            <Button text="Storico Biglietti" onAction="#showStorico" prefWidth="150"/>
+            <Button text="Notifiche" onAction="#showNotifiche" prefWidth="150"/>
+            <Button text="Promozione Attiva" onAction="#showOfferta" prefWidth="150"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentPane"
+                   style="-fx-background-color: white; -fx-padding: 20;"/>
+    </center>
+</BorderPane>
