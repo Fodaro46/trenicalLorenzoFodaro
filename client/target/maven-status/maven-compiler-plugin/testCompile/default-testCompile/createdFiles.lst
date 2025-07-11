@@ -1,0 +1,4 @@
+com\trenical\client\controller\LoginControllerTest.class
+com\trenical\client\factory\DefaultTicketCreatorTest.class
+com\trenical\client\factory\TicketFactoryTest.class
+com\trenical\client\session\SessionManagerTest.class

@@ -8,14 +8,14 @@ C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\GrpcServer.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\repository\TrattaRepository.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\model\Biglietto.java
+C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\sconto\ContestoSconto.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\sconto\ScontoWeekend.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\model\Treno.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\repository\BigliettoRepository.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\model\Utente.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\session\SessionManager.java
-C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\util\NotificationRegistryTest.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\service\TrenicalServiceImpl.java
-C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\sconto\GestoreScontiTest.java
+C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\sconto\ScontoFedelta.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\sconto\GestoreSconti.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\TrenicalAdminApp.java
 C:\Users\loreg\OneDrive\Desktop\Progetto Trenical Lorenzo Fodaro\server\src\main\java\com\trenical\server\repository\UtenteRepository.java

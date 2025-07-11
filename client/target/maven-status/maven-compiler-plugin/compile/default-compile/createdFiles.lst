@@ -1,0 +1,17 @@
+com\trenical\client\controller\LoginController$1.class
+com\trenical\client\session\NotificaListener.class
+com\trenical\client\controller\MainController.class
+com\trenical\client\factory\TicketFactory.class
+com\trenical\client\ClientMain.class
+com\trenical\client\controller\NotificheController.class
+com\trenical\client\factory\TicketCreator.class
+com\trenical\client\session\SessionManager.class
+com\trenical\client\controller\TrattaController.class
+com\trenical\client\model\Tratta.class
+com\trenical\client\model\User.class
+com\trenical\client\controller\LoginController.class
+com\trenical\client\factory\DefaultTicketCreator.class
+com\trenical\client\controller\AcquistoController.class
+com\trenical\client\model\Ticket.class
+com\trenical\client\controller\TicketHistoryController.class
+com\trenical\client\controller\OffertaController.class
