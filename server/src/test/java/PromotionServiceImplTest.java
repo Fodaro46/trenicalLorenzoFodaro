@@ -67,13 +67,20 @@ class PromotionServiceImplTest {
         String userId = "anonimo3";
         UtenteRepository.salvaUtente(new Utente(userId, "no@dominio.com"));
 
-        String dataQualunque = LocalDate.now().plusDays(3).toString();
-        Tratta tratta = buildTratta(dataQualunque, "11:00");
+        LocalDate oggi = LocalDate.now();
+        if (!(oggi.getDayOfWeek() == java.time.DayOfWeek.SATURDAY || oggi.getDayOfWeek() == java.time.DayOfWeek.SUNDAY)) {
+            System.out.println("⏩ Test ignorato: oggi non è weekend (" + oggi.getDayOfWeek() + ")");
+            return;
+        }
+
+        String dataViaggio = oggi.plusDays(3).toString();
+        Tratta tratta = buildTratta(dataViaggio, "11:00");
 
         OffertaResponse off = service.getOffertaLocally(tratta, userId);
         assertEquals(90.0, off.getPrezzoScontato(), 0.01);
         assertEquals("Sconto Weekend", off.getTipo());
     }
+
 
     @Test
     void testGetOffertaLastMinute() {

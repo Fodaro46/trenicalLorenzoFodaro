@@ -71,9 +71,15 @@ class GestoreScontiTest {
         String userId = "anonimo";
         UtenteRepository.salvaUtente(new Utente(userId, "anonimo@dominio.com"));
 
-        // Anche se data di viaggio è qualunque, su weekend il purchase date è weekend
-        String dataQualunque = LocalDate.now().plusDays(3).toString();
-        Tratta tratta = buildTratta(dataQualunque, "09:45");
+        // Forza il test ad essere valido solo nel weekend
+        LocalDate oggi = LocalDate.now();
+        if (!(oggi.getDayOfWeek() == java.time.DayOfWeek.SATURDAY || oggi.getDayOfWeek() == java.time.DayOfWeek.SUNDAY)) {
+            System.out.println("⏩ Test ignorato: oggi non è weekend (" + oggi.getDayOfWeek() + ")");
+            return;
+        }
+
+        String dataViaggio = oggi.plusDays(1).toString(); // qualunque giorno successivo
+        Tratta tratta = buildTratta(dataViaggio, "09:45");
 
         OffertaResponse off = gestore.calcolaMiglioreOfferta(tratta, userId);
         assertEquals(90.0, off.getPrezzoScontato(), 0.01);

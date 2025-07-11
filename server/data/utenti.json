@@ -70,5 +70,11 @@
     "userId": "user-451607534",
     "email": "sivaaletto?@letto.com",
     "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-411292677",
+    "email": "mario.rossi@email.it",
+    "isFedelta": false
   }
 ]
