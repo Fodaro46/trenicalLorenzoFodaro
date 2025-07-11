@@ -64,5 +64,11 @@
     "userId": "user-2014569677",
     "email": "porcodio@porcodio.com",
     "isFedelta": true
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-451607534",
+    "email": "sivaaletto?@letto.com",
+    "isFedelta": false
   }
 ]
