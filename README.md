@@ -4,7 +4,7 @@
 
 ---
 
-## ⚙ Tecnologie utilizzate
+## Tecnologie utilizzate
 
 - **Java 21**
 - **JavaFX** (GUI Utente e GUI Admin)
