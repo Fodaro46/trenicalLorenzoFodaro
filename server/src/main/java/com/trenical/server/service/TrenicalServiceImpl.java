@@ -197,7 +197,7 @@ public class TrenicalServiceImpl extends TrenicalServiceGrpc.TrenicalServiceImpl
                 Notifica n = Notifica.newBuilder()
                         .setId("N-" + UUID.randomUUID())
                         .setUserId(u.getUserId())
-                        .setMessaggio("🔄 Tratta aggiornata: " + g.getStazionePartenza() + " → " + g.getStazioneArrivo())
+                        .setMessaggio(" Tratta aggiornata: " + g.getStazionePartenza() + " → " + g.getStazioneArrivo())
                         .setTimestamp(LocalDateTime.now().toString())
                         .build();
                 NotificationRegistry.addNotification(u.getUserId(), n);

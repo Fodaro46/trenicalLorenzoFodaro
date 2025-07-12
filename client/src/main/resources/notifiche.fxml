@@ -9,7 +9,7 @@
       spacing="10" alignment="CENTER"
       style="-fx-padding: 20;">
 
-    <Label text="📬 Notifiche in tempo reale" />
+    <Label text=" Notifiche in tempo reale" />
 
     <TextArea fx:id="notificheArea"
               prefHeight="300"

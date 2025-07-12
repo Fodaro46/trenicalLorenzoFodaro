@@ -106,7 +106,7 @@ public class NotificationRegistry {
                         .setId(n.getId() + "_LETTA")
                         .build();
                 lista.set(i, letta);
-                System.out.println("✅ [NotificationRegistry] Notifica segnata come letta: " + idNotifica);
+                System.out.println(" [NotificationRegistry] Notifica segnata come letta: " + idNotifica);
                 break;
             }
         }
@@ -128,14 +128,14 @@ public class NotificationRegistry {
         }
 
         salvaNotifiche();
-        System.out.println("✅ [NotificationRegistry] Tutte le notifiche di " + userId + " segnate come lette");
+        System.out.println("[NotificationRegistry] Tutte le notifiche di " + userId + " segnate come lette");
     }
 
     private static void salvaNotifiche() {
         try (FileWriter writer = new FileWriter(FILE_PATH)) {
             gson.toJson(notifichePerUtente, writer);
         } catch (IOException e) {
-            System.err.println("❌ [NotificationRegistry] Errore salvataggio notifiche.json: " + e.getMessage());
+            System.err.println(" [NotificationRegistry] Errore salvataggio notifiche.json: " + e.getMessage());
         }
     }
 }

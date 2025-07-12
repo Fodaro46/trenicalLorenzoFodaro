@@ -139,11 +139,11 @@ public class MainController {
                             .build()
             );
             if (!resp.getTipo().equals("Nessuna offerta")) {
-                promoLabel.setText("🎁 Promo attiva: " + resp.getTipo());
+                promoLabel.setText("Promo attiva: " + resp.getTipo());
                 promoLabel.setVisible(true);
             }
         } catch (Exception e) {
-            System.err.println("⚠️ Errore nel badge promozione: " + e.getMessage());
+            System.err.println("Errore nel badge promozione: " + e.getMessage());
         } finally {
             if (channel != null && !channel.isShutdown()) {
                 channel.shutdownNow();

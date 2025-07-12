@@ -74,7 +74,7 @@ class GestoreScontiTest {
         // Forza il test ad essere valido solo nel weekend
         LocalDate oggi = LocalDate.now();
         if (!(oggi.getDayOfWeek() == java.time.DayOfWeek.SATURDAY || oggi.getDayOfWeek() == java.time.DayOfWeek.SUNDAY)) {
-            System.out.println("⏩ Test ignorato: oggi non è weekend (" + oggi.getDayOfWeek() + ")");
+            System.out.println("Test ignorato: oggi non è weekend (" + oggi.getDayOfWeek() + ")");
             return;
         }
 

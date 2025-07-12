@@ -18,7 +18,7 @@ public class StreamManager {
 
     public static void disconnetti(String userId) {
         observers.remove(userId);
-        System.out.println("❌ [StreamManager] Disconnesso stream per userId: " + userId);
+        System.out.println(" [StreamManager] Disconnesso stream per userId: " + userId);
     }
 
     public static void invia(String userId, Notifica notifica) {

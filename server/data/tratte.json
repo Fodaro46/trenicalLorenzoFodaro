@@ -35,8 +35,8 @@
     "stazionePartenza": "Roma",
     "stazioneArrivo": "Milano",
     "data": "2025-07-26",
-    "orarioPartenza": "10:00",
-    "orarioArrivo": "12:00",
+    "orarioPartenza": "11:00",
+    "orarioArrivo": "15:00",
     "prezzo": 103.58
   },
   {
@@ -295,7 +295,7 @@
     "stazionePartenza": "Roma",
     "stazioneArrivo": "Milano",
     "data": "2025-07-25",
-    "orarioPartenza": "10:00",
+    "orarioPartenza": "11:40",
     "orarioArrivo": "15:15",
     "prezzo": 24.02
   }

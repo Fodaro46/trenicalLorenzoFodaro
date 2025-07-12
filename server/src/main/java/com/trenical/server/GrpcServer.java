@@ -13,7 +13,7 @@ public class GrpcServer {
                 .build()
                 .start();
 
-        System.out.println("✅ gRPC Server avviato sulla porta 50051");
+        System.out.println(" gRPC Server avviato sulla porta 50051");
         server.awaitTermination();
     }
 }

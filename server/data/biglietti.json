@@ -174,5 +174,16 @@
     "prezzo": 88.04299999999999,
     "timestamp": "2025-07-26",
     "orario": "10:00"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "B-1791929487-1752279684737",
+    "userId": "user-467603885",
+    "trattaId": "103",
+    "partenza": "Roma",
+    "arrivo": "Milano",
+    "prezzo": 93.222,
+    "timestamp": "2025-07-26",
+    "orario": "10:00"
   }
 ]

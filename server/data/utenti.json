@@ -53,28 +53,17 @@
     "email": "prov@prov.com",
     "isFedelta": false
   },
-  {
-    "schemaVersion": 1,
-    "userId": "user-14540400",
-    "email": "porco@dio.it",
-    "isFedelta": true
-  },
-  {
-    "schemaVersion": 1,
-    "userId": "user-2014569677",
-    "email": "porcodio@porcodio.com",
-    "isFedelta": true
-  },
-  {
-    "schemaVersion": 1,
-    "userId": "user-451607534",
-    "email": "sivaaletto?@letto.com",
-    "isFedelta": false
-  },
+  
   {
     "schemaVersion": 1,
     "userId": "user-411292677",
     "email": "mario.rossi@email.it",
+    "isFedelta": false
+  },
+  {
+    "schemaVersion": 1,
+    "userId": "user-467603885",
+    "email": "logprov@logprov.com",
     "isFedelta": false
   }
 ]

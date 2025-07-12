@@ -50,13 +50,13 @@ public class SessionManager {
     }
 
     public synchronized void aggiungiNotifica(Notifica n) {
-        System.out.println("[DEBUG] ➕ Tentativo di aggiunta notifica:");
-        System.out.println("        🧾 Messaggio: " + n.getMessaggio());
-        System.out.println("        🆔 ID: " + (n.getId().isBlank() ? "VUOTO ❌" : n.getId()));
-        System.out.println("        👤 User: " + n.getUserId());
+        System.out.println("[DEBUG] Tentativo di aggiunta notifica:");
+        System.out.println("        Messaggio: " + n.getMessaggio());
+        System.out.println("        ID: " + (n.getId().isBlank() ? "VUOTO ❌" : n.getId()));
+        System.out.println("        User: " + n.getUserId());
 
         if (n.getUserId().isBlank() || n.getId().isBlank()) {
-            System.err.println("[WARN] ❌ Notifica non valida ignorata (userId o id vuoto).");
+            System.err.println("[WARN] Notifica non valida ignorata (userId o id vuoto).");
             return;
         }
 
@@ -67,8 +67,8 @@ public class SessionManager {
         }
 
         notificheRicevute.add(n);
-        System.out.println("[DEBUG] ✅ Notifica aggiunta. Totali ora: " + notificheRicevute.size());
-        System.out.println("[DEBUG] 🔔 Listener attivi: " + listeners.size());
+        System.out.println("[DEBUG]  Notifica aggiunta. Totali ora: " + notificheRicevute.size());
+        System.out.println("[DEBUG]  Listener attivi: " + listeners.size());
 
         // Notifica tutti i listener attivi
         notificaListeners(n);
@@ -109,15 +109,15 @@ public class SessionManager {
     }
 
     /**
-     * 🔥 METODO CHIAVE: Invia tutte le notifiche accumulate a un listener appena registrato
+     *  Invia tutte le notifiche accumulate a un listener appena registrato
      */
     private void inviaNotificheAccumulateAListener(NotificaListener listener) {
         if (notificheRicevute.isEmpty()) {
-            System.out.println("[DEBUG] 📭 Nessuna notifica accumulata da reinviare");
+            System.out.println("[DEBUG] Nessuna notifica accumulata da reinviare");
             return;
         }
 
-        System.out.println("[DEBUG] 📤 Reinvio " + notificheRicevute.size() + " notifiche accumulate a: " +
+        System.out.println("[DEBUG] Reinvio " + notificheRicevute.size() + " notifiche accumulate a: " +
                 listener.getClass().getSimpleName());
 
         // Esegui il reinvio nel thread JavaFX per evitare problemi di concorrenza
@@ -149,7 +149,7 @@ public class SessionManager {
     }
 
     /**
-     * 🆘 METODO DI EMERGENZA: Forza il reinvio manuale (solo per debug)
+     *  (solo per debug)
      */
     public void forzaReinvioNotifiche() {
         System.out.println("[DEBUG] 🚨 FORZA REINVIO - Listener attivi: " + listeners.size());
