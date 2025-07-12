@@ -1,10 +1,10 @@
-# 🚄 Trenical – Sistema Ferroviario Distribuito
+# Trenical – Sistema Ferroviario Distribuito
 
 **Trenical** è un’applicazione client-server in Java, sviluppata per il corso di *Ingegneria del Software* (a.a. 2024/2025), per la gestione di tratte ferroviarie, biglietti, promozioni personalizzate e notifiche in tempo reale. Comunica via **gRPC** e offre due GUI realizzate in **JavaFX**: una per l’utente e una per l’amministratore.
 
 ---
 
-## ⚙️ Tecnologie utilizzate
+## ⚙ Tecnologie utilizzate
 
 - **Java 21**
 - **JavaFX** (GUI Utente e GUI Admin)
@@ -15,7 +15,7 @@
 
 ---
 
-## 📁 Struttura del progetto
+## Struttura del progetto
 Progetto Trenical Lorenzo Fodaro/
 ├── client/ ← GUI JavaFX lato utente
 ├── server/ ← Server gRPC + GUI JavaFX lato admin
