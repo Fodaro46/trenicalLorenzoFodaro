@@ -84,3 +84,5 @@ Interfaccia JavaFX con TableView, form di insert/update
 ![proto3](docs/screenshot/proto3.png)
 ![proto4](docs/screenshot/proto4.png)
 ![proto5](docs/screenshot/proto5.png)
+
+I jar sono allocati nelle varie cartelle target di common client e server
